@@ -1,0 +1,25 @@
+{
+  "name": "evertheme-pro",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit -p tsconfig.app.json && vite build",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "lucide-solid": "latest",
+    "solid-js": "latest",
+    "vite": "latest",
+    "vite-plugin-solid": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/pngjs": "latest",
+    "pngjs": "latest",
+    "typescript": "latest",
+    "vitest": "latest"
+  }
+}
