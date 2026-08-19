@@ -20,11 +20,14 @@
   --orange: #e9874b;
   /* Unitless degrees make the canvas motion angle easy to tune. */
   --pixel-grid-angle: 30;
+  --pixel-grid-angle-range: 135;
   --pixel-grid-color: rgba(203, 229, 106, .07);
   --pixel-grid-dot-size: 2;
+  --pixel-grid-dwell-min: 6;
+  --pixel-grid-dwell-max: 13.5;
   --pixel-grid-fps: 10;
   --pixel-grid-spacing: 48;
-  --pixel-grid-speed: 12;
+  --pixel-grid-speed: 18;
 }
 
 * { box-sizing: border-box; }
