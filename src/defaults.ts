@@ -23,7 +23,7 @@ export const DEFAULT_SETTINGS: ThemeSettings = {
   },
 };
 
-export const LAYOUT_PRESETS: Record<string, Pick<ThemeSettings, "header" | "footer" | "files">> = {
+export const LAYOUT_PRESETS = {
   framed: {
     header: DEFAULT_SETTINGS.header,
     footer: DEFAULT_SETTINGS.footer,
@@ -39,7 +39,9 @@ export const LAYOUT_PRESETS: Record<string, Pick<ThemeSettings, "header" | "foot
     footer: { style: 0, x: 0, y: 18, width: 30, height: 2, textX: 0, textY: 0 },
     files: { style: 1, x: 1, y: 2, width: 28, height: 16, textX: 0, textY: 0 },
   },
-};
+} satisfies Record<string, Pick<ThemeSettings, "header" | "footer" | "files">>;
+
+export type LayoutPresetName = keyof typeof LAYOUT_PRESETS;
 
 const hexToGbaTriplet = (hex: string) => {
   const value = Number.parseInt(hex.slice(1), 16);

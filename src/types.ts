@@ -11,6 +11,7 @@ export type PixelImage = {
 };
 
 export type BarStyle = 0 | 1 | 3 | 9 | 13;
+export type ThemeRegion = "header" | "files" | "footer";
 
 export type RegionSettings = {
   style: BarStyle;

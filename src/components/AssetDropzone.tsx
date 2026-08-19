@@ -5,7 +5,7 @@
 // ╰─────────────────────────────╯
 
 import { createSignal, type Component, type JSX } from "solid-js";
-import { Check, ImagePlus, Type } from "lucide-solid";
+import { Check, ImagePlus, Type } from "./icons";
 
 type AssetDropzoneProps = {
   kind: "image" | "font";

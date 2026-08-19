@@ -7,6 +7,12 @@
 import type { PixelImage } from "../types";
 
 const FONT_EXTENSIONS = /\.(ttf|otf|woff2?)$/i;
+const GLYPH_CELL_SIZE = 8;
+const GLYPH_MAX_WIDTH = 7;
+const GLYPH_MAX_HEIGHT = 7;
+const GLYPH_THRESHOLD = 40;
+const FONT_SIZE_CANDIDATES = [32, 24, 20, 18, 16, 14, 12, 10, 9, 8];
+const FONT_SIZE_PROBE = "AHMWgpqy0123456789";
 
 const loadBitmap = async (source: Blob | string) => {
   const blob = typeof source === "string" ? await fetch(source).then((response) => response.blob()) : source;
@@ -123,6 +129,18 @@ export async function loadPixelImage(source: Blob | string, width: number, heigh
   return canvasPixels(bitmap, width, height, "stretch");
 }
 
+const selectFontSize = (context: CanvasRenderingContext2D, family: string) => {
+  for (const size of FONT_SIZE_CANDIDATES) {
+    context.font = `${size}px "${family}"`;
+    const fits = [...FONT_SIZE_PROBE].every((character) => {
+      const metrics = context.measureText(character);
+      return metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent <= GLYPH_MAX_HEIGHT;
+    });
+    if (fits) return size;
+  }
+  return GLYPH_CELL_SIZE;
+};
+
 export async function prepareFont(file: File): Promise<PixelImage> {
   if (!FONT_EXTENSIONS.test(file.name)) {
     const bitmap = await loadBitmap(file);
@@ -144,17 +162,47 @@ export async function prepareFont(file: File): Promise<PixelImage> {
   if (!context) throw new Error("Your browser does not support font rendering.");
   context.fillStyle = "#000";
   context.fillRect(0, 0, 128, 64);
+
+  const fontSize = selectFontSize(context, family);
+  context.font = `${fontSize}px "${family}"`;
   context.fillStyle = "#fff";
-  context.font = `8px ${family}`;
-  context.textAlign = "center";
-  context.textBaseline = "middle";
-  for (let glyph = 0; glyph < 128; glyph += 1) {
-    const x = (glyph % 16) * 8 + 4;
-    const y = Math.floor(glyph / 16) * 8 + 4;
-    context.fillText(String.fromCharCode(glyph + 0x20), x, y);
+  context.textAlign = "left";
+  context.textBaseline = "alphabetic";
+
+  // Pixel TTFs may map their intended bitmap to 16px or larger CSS sizes. Probe
+  // the real ink bounds, then preserve that native grid inside each 8x8 cell.
+  for (let glyph = 1; glyph <= 94; glyph += 1) {
+    const character = String.fromCharCode(glyph + 0x20);
+    const metrics = context.measureText(character);
+    const inkWidth = metrics.actualBoundingBoxLeft + metrics.actualBoundingBoxRight || metrics.width;
+    const horizontalScale = Math.min(1, GLYPH_MAX_WIDTH / inkWidth);
+    const cellX = (glyph % 16) * GLYPH_CELL_SIZE;
+    const cellY = Math.floor(glyph / 16) * GLYPH_CELL_SIZE;
+    const inkCenter = (metrics.actualBoundingBoxRight - metrics.actualBoundingBoxLeft) / 2;
+    const baseline = Math.min(
+      cellY + GLYPH_CELL_SIZE - metrics.actualBoundingBoxDescent,
+      Math.max(cellY + metrics.actualBoundingBoxAscent, cellY + GLYPH_CELL_SIZE - 1),
+    );
+    context.save();
+    context.beginPath();
+    context.rect(cellX, cellY, GLYPH_CELL_SIZE, GLYPH_CELL_SIZE);
+    context.clip();
+    context.translate(cellX + GLYPH_CELL_SIZE / 2, baseline);
+    context.scale(horizontalScale, 1);
+    context.fillText(character, -inkCenter, 0);
+    context.restore();
   }
   document.fonts.delete(face);
-  return quantizeImage({ width: 128, height: 64, data: context.getImageData(0, 0, 128, 64).data }, 2);
+
+  const atlas = context.getImageData(0, 0, 128, 64);
+  for (let index = 0; index < atlas.data.length; index += 4) {
+    const ink = atlas.data[index] >= GLYPH_THRESHOLD;
+    atlas.data[index] = ink ? 255 : 0;
+    atlas.data[index + 1] = ink ? 255 : 0;
+    atlas.data[index + 2] = ink ? 255 : 0;
+    atlas.data[index + 3] = 255;
+  }
+  return { width: 128, height: 64, data: atlas.data };
 }
 
 export function pixelImageUrl(image: PixelImage) {

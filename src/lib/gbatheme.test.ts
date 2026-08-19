@@ -9,7 +9,8 @@ import { resolve } from "node:path";
 import { PNG } from "pngjs";
 import { describe, expect, it } from "vitest";
 import type { PixelImage } from "../types";
-import { compileTheme, parseOfficialConfig } from "./gbatheme";
+import { compileTheme } from "./gbatheme";
+import { parseOfficialConfig } from "./officialConfig";
 
 const vendorRoot = resolve(process.cwd(), "vendor/gbatheme");
 
