@@ -49,7 +49,7 @@
 
 .sp-screen-stage {
   position: absolute;
-  top: 11%;
+  top: 10.2%;
   left: 7%;
   width: 86%;
   height: 74%;
@@ -62,7 +62,7 @@
   flex-direction: column;
   width: 100%;
   height: 100%;
-  padding: 7.7% 6% 0;
+  padding: 6.8% 6% 0;
   border: 1px solid #171a16;
   border-radius: 2.3%;
   background: linear-gradient(145deg, #161916, #090b09 72%);
@@ -111,6 +111,29 @@
 .sp-fastener--top-right { top: 2.4%; right: 4.4%; }
 .sp-fastener--bottom-left { bottom: 3.4%; left: 4.4%; }
 .sp-fastener--bottom-right { right: 4.4%; bottom: 3.4%; }
+
+.sp-menu-toggle {
+  position: absolute;
+  left: 50%;
+  bottom: 3.2%;
+  z-index: 3;
+  transform: translateX(-50%);
+  border: 1px solid color-mix(in srgb, var(--sp-shell-dark) 78%, black);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--sp-shell-mid) 82%, black);
+  box-shadow: inset 0 1px rgba(255,255,255,.13), 0 1px 2px rgba(0,0,0,.26);
+  color: color-mix(in srgb, var(--sp-shell-light) 72%, white);
+  padding: .45em 1.15em;
+  font: 800 clamp(6px, .85vw, 8px)/1 ui-monospace, monospace;
+  letter-spacing: .12em;
+  cursor: pointer;
+}
+
+.sp-menu-toggle:hover, .sp-menu-toggle:focus-visible, .sp-menu-toggle.is-active {
+  border-color: color-mix(in srgb, var(--sp-shell-light) 75%, white);
+  background: color-mix(in srgb, var(--sp-shell-light) 24%, var(--sp-shell-dark));
+  outline: none;
+}
 
 .sp-wordmark {
   flex: 1;

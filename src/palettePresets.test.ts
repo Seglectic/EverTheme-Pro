@@ -6,7 +6,7 @@
 
 import { describe, expect, it } from "vitest";
 import { DEFAULT_SETTINGS } from "./defaults";
-import { matchingPalettePreset, PALETTE_PRESETS } from "./palettePresets";
+import { matchingPalettePreset, palettePreset, PALETTE_PRESETS } from "./palettePresets";
 
 describe("theme palette presets", () => {
   it("keeps the editor defaults mapped to EverTheme", () => {
@@ -22,5 +22,16 @@ describe("theme palette presets", () => {
 
   it("treats manual color edits as a custom palette", () => {
     expect(matchingPalettePreset({ ...DEFAULT_SETTINGS.colors, text: "#ffffff" })).toBeUndefined();
+  });
+
+  it("keeps every debug mapping visually distinct and GBA-aligned", () => {
+    const colors = Object.values(palettePreset("debug").colors);
+    expect(new Set(colors).size).toBe(6);
+    for (const color of colors) {
+      const value = Number.parseInt(color.slice(1), 16);
+      expect((value >>> 16) & 7).toBe(0);
+      expect((value >>> 8) & 7).toBe(0);
+      expect(value & 7).toBe(0);
+    }
   });
 });

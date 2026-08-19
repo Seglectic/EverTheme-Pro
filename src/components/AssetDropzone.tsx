@@ -57,8 +57,8 @@ const AssetDropzone: Component<AssetDropzoneProps> = (props) => {
       >
         <span class="dropzone-icon">{props.fileName ? <Check size={18} /> : <Icon size={18} />}</span>
         <span class="dropzone-copy">
-          <strong>{props.fileName ?? props.title}</strong>
-          <small>{props.fileName ? "Click or drop to replace" : props.description}</small>
+          <strong>{props.title}</strong>
+          <small>{props.fileName ? `${props.fileName} · click or drop to replace` : props.description}</small>
         </span>
       </button>
     </>

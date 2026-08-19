@@ -85,6 +85,18 @@ export const PALETTE_PRESETS = [
       selectionText: "#fdf6e3",
     },
   },
+  {
+    id: "debug",
+    label: "Debug mappings",
+    colors: {
+      background: "#f800f8",
+      chrome: "#00f8f8",
+      text: "#f8f8f8",
+      directory: "#f8f800",
+      selection: "#f80000",
+      selectionText: "#00f800",
+    },
+  },
 ] as const satisfies readonly PalettePreset[];
 
 export type PalettePresetId = (typeof PALETTE_PRESETS)[number]["id"];

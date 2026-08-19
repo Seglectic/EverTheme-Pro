@@ -5,7 +5,6 @@
 // ╰─────────────────────────────╯
 
 import AssetsPanel from "./components/AssetsPanel";
-import { LockKeyhole } from "./components/icons";
 import PixelGridBackdrop from "./components/PixelGridBackdrop";
 import ThemePanel from "./components/ThemePanel";
 import ThemePreview from "./components/ThemePreview";
@@ -17,21 +16,14 @@ export default function App() {
   return (
     <>
       <PixelGridBackdrop />
+      <a class="wordmark" href="#top" aria-label="EverTheme Pro home">
+        <span class="wordmark-mark">EP</span>
+        <span>
+          <strong>EverTheme</strong>
+          <small>PRO</small>
+        </span>
+      </a>
       <main class="app-shell" id="top">
-        <header class="site-header">
-          <a class="wordmark" href="#top" aria-label="EverTheme Pro home">
-            <span class="wordmark-mark">EP</span>
-            <span>
-              <strong>EverTheme</strong>
-              <small>PRO</small>
-            </span>
-          </a>
-          <div class="header-meta">
-            <span><LockKeyhole size={13} /> 100% local</span>
-            <span class="version">BGR / 01</span>
-          </div>
-        </header>
-
         <section class="studio" aria-label="Theme editor">
           <AssetsPanel
             settings={editor.settings}

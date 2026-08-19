@@ -51,14 +51,10 @@ type AssetsPanelProps = {
 
 const AssetsPanel: Component<AssetsPanelProps> = (props) => (
   <aside class="panel assets-panel">
-    <div class="panel-heading">
-      <span>01</span>
-      <div><p>Source material</p><h2>Assets</h2></div>
-    </div>
-
+    <h2 class="section-heading">Background</h2>
     <AssetDropzone
       kind="image"
-      title="Drop a background"
+      title="Drop Image"
       description="PNG, JPG or WebP · any size"
       accept="image/png,image/jpeg,image/webp"
       fileName={props.backgroundName}
@@ -101,8 +97,8 @@ const AssetsPanel: Component<AssetsPanelProps> = (props) => (
       </details>
     </div>
 
-    <div class="field-group">
-      <span class="field-label">Layout</span>
+    <div class="field-group layout-controls">
+      <h2 class="section-heading">Layout</h2>
       <div class="segmented">
         <button type="button" onClick={() => props.onPreset("framed")}>Framed</button>
         <button type="button" onClick={() => props.onPreset("classic")}>Classic</button>

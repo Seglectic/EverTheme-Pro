@@ -10,6 +10,8 @@ import { randomSpFinish } from "./spFinishes";
 
 type SpPreviewFrameProps = {
   children: JSX.Element;
+  menuOpen: boolean;
+  onToggleMenu: () => void;
 };
 
 type FastenerPosition = "top" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
@@ -45,6 +47,16 @@ const SpPreviewFrame: Component<SpPreviewFrameProps> = (props) => {
 
       <Fastener position="bottom-left" />
       <Fastener position="bottom-right" />
+      <button
+        class="sp-menu-toggle"
+        classList={{ "is-active": props.menuOpen }}
+        type="button"
+        aria-pressed={props.menuOpen}
+        title="Toggle popup menu preview"
+        onClick={props.onToggleMenu}
+      >
+        MENU
+      </button>
     </figure>
   );
 };

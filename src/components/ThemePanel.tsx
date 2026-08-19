@@ -14,8 +14,8 @@ import MotionGrid from "./MotionGrid";
 
 const COLOR_LABELS: Record<keyof ThemeColors, string> = {
   background: "Base",
-  chrome: "Chrome",
-  text: "File text",
+  chrome: "Popup fill",
+  text: "Text + outlines",
   directory: "Folder text",
   selection: "Selected background",
   selectionText: "Selected text",
@@ -36,12 +36,7 @@ type ThemePanelProps = {
 
 const ThemePanel: Component<ThemePanelProps> = (props) => (
   <aside class="panel finish-panel">
-    <div class="panel-heading">
-      <span>02</span>
-      <div><p>Finish & export</p><h2>Theme</h2></div>
-    </div>
-
-    <div class="field-group">
+    <div class="field-group theme-name-group">
       <label for="theme-name">Theme name</label>
       <div class="filename-input">
         <input id="theme-name" value={props.settings.name} onInput={(event) => props.onName(event.currentTarget.value)} />
@@ -50,9 +45,10 @@ const ThemePanel: Component<ThemePanelProps> = (props) => (
     </div>
 
     <div class="field-group">
-      <label for="palette-preset">Palette</label>
+      <h2 class="section-heading">Palette</h2>
       <select
         id="palette-preset"
+        aria-label="Palette preset"
         class="palette-preset-select"
         value={matchingPalettePreset(props.settings.colors)?.id ?? "custom"}
         onChange={(event) => {
@@ -80,7 +76,7 @@ const ThemePanel: Component<ThemePanelProps> = (props) => (
     </div>
 
     <div class="field-group motion-controls">
-      <label>Background motion</label>
+      <h2 class="section-heading">Motion</h2>
       <MotionGrid
         x={visualMotionX(props.settings.scrollX)}
         y={props.settings.scrollY}
@@ -88,17 +84,19 @@ const ThemePanel: Component<ThemePanelProps> = (props) => (
       />
     </div>
 
-    <div class="export-card">
-      <div>
-        <small>OUTPUT</small>
-        <strong>{safeThemeName(props.settings.name)}.bgr</strong>
+    <div class="field-group output-controls">
+      <h2 class="section-heading">Output</h2>
+      <div class="export-card">
+        <div>
+          <strong>{safeThemeName(props.settings.name)}.bgr</strong>
+        </div>
+        <Show when={props.compiled} fallback={<span>Preparing…</span>}>
+          <span>{formatBytes(props.compiled!.length)} · ready</span>
+        </Show>
+        <button class="download-button" type="button" disabled={!props.compiled} onClick={props.onDownload}>
+          <Download size={17} /> Download theme
+        </button>
       </div>
-      <Show when={props.compiled} fallback={<span>Preparing…</span>}>
-        <span>{formatBytes(props.compiled!.length)} · ready</span>
-      </Show>
-      <button class="download-button" type="button" disabled={!props.compiled} onClick={props.onDownload}>
-        <Download size={17} /> Download theme
-      </button>
     </div>
 
     <button class="reset-button" type="button" onClick={props.onReset}><RotateCcw size={14} /> Reset editor</button>
