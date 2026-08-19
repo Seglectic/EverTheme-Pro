@@ -184,7 +184,7 @@ button { color: inherit; }
 .advanced select, .advanced input { width: 100%; border: 1px solid #3b4036; border-radius: 3px; background: #11140f; color: var(--ink); padding: 7px; }
 .number-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 8px; }
 
-.preview-column { min-width: 0; display: flex; flex-direction: column; justify-content: flex-start; padding: clamp(58px, 6vw, 78px) clamp(24px, 4vw, 68px) 36px; background: radial-gradient(circle at 50% 36%, #30352b, #1c1f19 58%, #171a15); }
+.preview-column { container: preview / inline-size; min-width: 0; display: flex; flex-direction: column; justify-content: flex-start; padding: clamp(58px, 6vw, 78px) clamp(18px, 2vw, 28px) 36px; background: radial-gradient(circle at 50% 36%, #30352b, #1c1f19 58%, #171a15); }
 
 .filename-input { display: flex; align-items: center; background: #11140f; border: 1px solid #3a3f35; border-radius: 4px; overflow: hidden; }
 .filename-input input { min-width: 0; flex: 1; color: var(--ink); background: transparent; border: 0; outline: 0; padding: 11px; font-size: 12px; }

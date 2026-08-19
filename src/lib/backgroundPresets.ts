@@ -126,7 +126,7 @@ export const BACKGROUND_PRESETS: readonly BackgroundPreset[] = [
   {
     id: "checks",
     label: "Micro check",
-    defaultColors: { background: "#10140f", primary: "#4c5b30" },
+    defaultColors: { background: "#10140f", primary: "#31513f" },
     speed: [1, 3],
     render: checks,
   },

@@ -54,6 +54,10 @@ describe("background presets", () => {
       .toEqual(["pluses", "seigaiha"]);
   });
 
+  it("keeps the preferred Micro Check foreground color", () => {
+    expect(backgroundPreset("checks").defaultColors.primary).toBe("#31513f");
+  });
+
   it("can choose the complete preset range", () => {
     expect(randomBackgroundPreset(() => 0)).toBe(BACKGROUND_PRESETS[0]);
     expect(randomBackgroundPreset(() => 0.999_999)).toBe(BACKGROUND_PRESETS.at(-1));

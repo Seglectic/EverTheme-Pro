@@ -5,6 +5,7 @@
 // ╰──────────────────────────────╯
 
 import { createEffect, createSignal, onCleanup, type Component } from "solid-js";
+import { createPreviewFileList, previewRowAtCanvasPoint, type PreviewFile } from "../lib/previewGames";
 import type { PixelImage, RegionSettings, ThemeSettings } from "../types";
 import SpPreviewFrame from "./SpPreviewFrame";
 
@@ -19,16 +20,6 @@ type FontAtlases = {
   directory: HTMLCanvasElement;
   selection: HTMLCanvasElement;
 };
-
-const FILES = [
-  { name: "SYSTEM", directory: true },
-  { name: "themes", directory: true },
-  { name: "Advance Wars.gba", directory: false },
-  { name: "Castlevania.gba", directory: false },
-  { name: "Metroid Fusion.gba", directory: false },
-  { name: "Mother 3.gba", directory: false },
-];
-const SELECTED_ROW = 4;
 
 const makeCanvas = (width: number, height: number) => {
   const canvas = document.createElement("canvas");
@@ -128,7 +119,13 @@ function paintBackground(
   }
 }
 
-function paintMenu(context: CanvasRenderingContext2D, settings: ThemeSettings, atlases: FontAtlases | undefined) {
+function paintMenu(
+  context: CanvasRenderingContext2D,
+  settings: ThemeSettings,
+  atlases: FontAtlases | undefined,
+  entries: PreviewFile[],
+  selectedRow: number,
+) {
   const { header, footer, files, colors } = settings;
   if (header.style !== 0) {
     paintRegion(context, header, colors.chrome, colors.text);
@@ -138,22 +135,22 @@ function paintMenu(context: CanvasRenderingContext2D, settings: ThemeSettings, a
   if (files.style !== 0) paintRegion(context, files, colors.chrome, colors.text);
   const startX = (files.x + files.textX) * 8;
   const startY = (files.y + files.textY) * 8;
-  const visibleRows = Math.max(0, Math.min(FILES.length, files.height - files.textY));
+  const visibleRows = Math.max(0, Math.min(entries.length, files.height - files.textY));
   for (let row = 0; row < visibleRows; row += 1) {
     const y = startY + row * 8;
-    if (row === SELECTED_ROW) {
+    if (row === selectedRow) {
       context.fillStyle = colors.selection;
       context.fillRect(files.x * 8, y, files.width * 8, 8);
     }
     if (!atlases) continue;
-    const entry = FILES[row];
-    const atlas = row === SELECTED_ROW ? atlases.selection : entry.directory ? atlases.directory : atlases.text;
+    const entry = entries[row];
+    const atlas = row === selectedRow ? atlases.selection : entry.directory ? atlases.directory : atlases.text;
     drawText(context, atlas, entry.name, startX, y);
   }
 
   if (footer.style !== 0) {
     paintRegion(context, footer, colors.chrome, colors.text);
-    if (atlases) drawText(context, atlases.text, FILES[SELECTED_ROW].name, (footer.x + footer.textX) * 8, (footer.y + footer.textY) * 8);
+    if (atlases) drawText(context, atlases.text, entries[selectedRow].name, (footer.x + footer.textX) * 8, (footer.y + footer.textY) * 8);
   }
 }
 
@@ -184,6 +181,17 @@ function paintPopupMenu(context: CanvasRenderingContext2D, settings: ThemeSettin
 const ThemePreview: Component<ThemePreviewProps> = (props) => {
   let screen!: HTMLCanvasElement;
   const [menuOpen, setMenuOpen] = createSignal(false);
+  const fileList = createPreviewFileList();
+  const [selectedRow, setSelectedRow] = createSignal(fileList.selectedRow);
+
+  const selectFile = (event: MouseEvent) => {
+    if (menuOpen()) return;
+    const bounds = screen.getBoundingClientRect();
+    const canvasX = (event.clientX - bounds.left) * (screen.width / bounds.width);
+    const canvasY = (event.clientY - bounds.top) * (screen.height / bounds.height);
+    const row = previewRowAtCanvasPoint(fileList.entries, props.settings.files, canvasX, canvasY);
+    if (row !== undefined) setSelectedRow(row);
+  };
 
   createEffect(() => {
     const settings = JSON.parse(JSON.stringify(props.settings)) as ThemeSettings;
@@ -211,7 +219,7 @@ const ThemePreview: Component<ThemePreviewProps> = (props) => {
       offsetX += (settings.scrollX / 16) * elapsedFrames;
       offsetY += (settings.scrollY / 16) * elapsedFrames;
       paintBackground(context, background, settings.colors.background, offsetX, offsetY);
-      paintMenu(context, settings, atlases);
+      paintMenu(context, settings, atlases, fileList.entries, selectedRow());
       if (showPopupMenu) paintPopupMenu(context, settings, atlases);
       frame = requestAnimationFrame(render);
     };
@@ -221,7 +229,14 @@ const ThemePreview: Component<ThemePreviewProps> = (props) => {
 
   return (
     <SpPreviewFrame menuOpen={menuOpen()} onToggleMenu={() => setMenuOpen((open) => !open)}>
-      <canvas ref={screen} class="gba-screen" width="240" height="160" aria-label="Rendered theme screen" />
+      <canvas
+        ref={screen}
+        class="gba-screen"
+        width="240"
+        height="160"
+        aria-label="Rendered theme screen; click a file or folder to preview its selected colors"
+        onClick={selectFile}
+      />
     </SpPreviewFrame>
   );
 };

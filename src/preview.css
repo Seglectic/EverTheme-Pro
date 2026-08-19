@@ -24,7 +24,7 @@
 
 .sp-frame {
   position: relative;
-  width: min(520px, 100%);
+  width: min(320px, 100%);
   aspect-ratio: 82 / 73;
   margin: 0 auto;
   overflow: hidden;
@@ -74,13 +74,22 @@
 
 .gba-screen {
   display: block;
-  width: 100%;
-  aspect-ratio: 3 / 2;
+  flex: 0 0 auto;
+  align-self: center;
+  width: 240px;
+  height: 160px;
+  cursor: pointer;
   background: #080b08;
   box-shadow:
     inset 0 0 17px rgba(0,0,0,.38),
     0 0 0 1px #020302;
   image-rendering: pixelated;
+}
+
+/* Integer scaling keeps every native GBA pixel the same visible size. */
+@container preview (min-width: 637px) {
+  .sp-frame { width: 637px; }
+  .gba-screen { width: 480px; height: 320px; }
 }
 
 .sp-fastener {
@@ -177,5 +186,5 @@
 }
 
 @media (max-width: 760px) {
-  .sp-frame { width: min(470px, 100%); }
+  .sp-frame { width: min(320px, 100%); }
 }

@@ -12,6 +12,28 @@ type PalettePreset = {
   colors: ThemeColors;
 };
 
+export const SEGLECTIC_THEME_PRESET = {
+  id: "seglectic",
+  label: "Seglectic",
+  colors: {
+    background: "#111510",
+    chrome: "#29362a",
+    text: "#ffffff",
+    directory: "#d4531a",
+    selection: "#ffbe6f",
+    selectionText: "#152015",
+  },
+  regions: {
+    header: { style: 1, x: 15, y: 19, width: 24, height: 1, textX: 0, textY: 0 },
+    files: { style: 9, x: 0, y: 0, width: 30, height: 18, textX: 0, textY: 0 },
+    footer: { style: 1, x: 0, y: 18, width: 23, height: 2, textX: 0, textY: 0 },
+  },
+  background: {
+    id: "pluses",
+    colors: { primary: "#365880", secondary: "#22291d", background: "#10140f" },
+  },
+} as const;
+
 export const PALETTE_PRESETS = [
   {
     id: "evertheme",
@@ -24,6 +46,11 @@ export const PALETTE_PRESETS = [
       selection: "#bbd675",
       selectionText: "#152015",
     },
+  },
+  {
+    id: SEGLECTIC_THEME_PRESET.id,
+    label: SEGLECTIC_THEME_PRESET.label,
+    colors: SEGLECTIC_THEME_PRESET.colors,
   },
   {
     id: "nord",

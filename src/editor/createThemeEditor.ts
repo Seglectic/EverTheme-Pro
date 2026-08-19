@@ -26,7 +26,7 @@ import {
 } from "../lib/backgroundPresets";
 import { compileTheme } from "../lib/gbatheme";
 import { loadPixelImage, prepareBackground, prepareFont } from "../lib/image";
-import { palettePreset, type PalettePresetId } from "../palettePresets";
+import { palettePreset, SEGLECTIC_THEME_PRESET, type PalettePresetId } from "../palettePresets";
 import type { PixelImage, RegionSettings, ThemeColors, ThemeRegion, ThemeSettings } from "../types";
 
 const errorMessage = (error: unknown, fallback: string) => error instanceof Error ? error.message : fallback;
@@ -167,6 +167,31 @@ export function createThemeEditor() {
     setMessage(`${preset.label} colors updated`);
   };
 
+  const setPalettePreset = (id: PalettePresetId) => {
+    const palette = palettePreset(id);
+    if (id !== SEGLECTIC_THEME_PRESET.id) {
+      setSettings("colors", { ...palette.colors });
+      return;
+    }
+
+    const coordinated = SEGLECTIC_THEME_PRESET;
+    const preset = backgroundPreset(coordinated.background.id);
+    const colors = { ...coordinated.background.colors };
+    const presetColors = { ...backgroundPresetColors(), [preset.id]: colors };
+    setSettings(produce((draft) => {
+      draft.colors = { ...coordinated.colors };
+      draft.header = { ...coordinated.regions.header };
+      draft.files = { ...coordinated.regions.files };
+      draft.footer = { ...coordinated.regions.footer };
+      Object.assign(draft, randomBackgroundMotion(preset));
+    }));
+    setBackgroundPresetColors(presetColors);
+    setBackground(generateBackgroundPreset(preset, colors));
+    setBackgroundName(`Built-in · ${preset.label}`);
+    setBackgroundPresetId(preset.id);
+    setMessage("Seglectic palette, layout, and background loaded");
+  };
+
   const reset = () => {
     const preset = randomBackgroundPreset();
     const presetColors = createDefaultBackgroundPresetColors();
@@ -218,7 +243,7 @@ export function createThemeEditor() {
     },
     setName: (value: string) => setSettings("name", value),
     setColor: (key: keyof ThemeColors, value: string) => setSettings("colors", key, value),
-    setPalettePreset: (id: PalettePresetId) => setSettings("colors", { ...palettePreset(id).colors }),
+    setPalettePreset,
     setMotion: (scrollX: number, scrollY: number) => setSettings({ scrollX, scrollY }),
     downloadTheme,
     reset,
