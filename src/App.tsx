@@ -36,8 +36,12 @@ export default function App() {
           <AssetsPanel
             settings={editor.settings}
             backgroundName={editor.backgroundName()}
+            backgroundPresetId={editor.backgroundPresetId()}
+            backgroundPresetColors={editor.backgroundPresetColors()}
             fontName={editor.fontName()}
             onBackground={editor.handleBackground}
+            onBackgroundPreset={editor.loadBackgroundPreset}
+            onBackgroundPresetColor={editor.setBackgroundPresetColor}
             onFont={editor.handleFont}
             onLoadSample={editor.loadSample}
             onDownloadTemplate={editor.downloadBackgroundTemplate}
@@ -54,6 +58,7 @@ export default function App() {
             compiled={editor.compiled()}
             onName={editor.setName}
             onColor={editor.setColor}
+            onPalettePreset={editor.setPalettePreset}
             onMotion={editor.setMotion}
             onDownload={editor.downloadTheme}
             onReset={editor.reset}

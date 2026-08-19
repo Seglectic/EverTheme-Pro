@@ -4,11 +4,20 @@
 // │  configures menu geometry.  │
 // ╰─────────────────────────────╯
 
-import { For, type Component } from "solid-js";
+import { For, lazy, type Component } from "solid-js";
 import type { LayoutPresetName } from "../defaults";
+import type {
+  BackgroundPresetColorKey,
+  BackgroundPresetColorMap,
+  BackgroundPresetId,
+} from "../lib/backgroundPresets";
 import type { RegionSettings, ThemeRegion, ThemeSettings } from "../types";
 import AssetDropzone from "./AssetDropzone";
 import { ImageDown, SlidersHorizontal } from "./icons";
+
+const DevBackgroundPresetPicker = import.meta.env.DEV
+  ? lazy(() => import("./BackgroundPresetPicker"))
+  : undefined;
 
 const REGION_LABELS: Array<[ThemeRegion, string]> = [
   ["header", "Header"],
@@ -27,8 +36,12 @@ const STYLE_OPTIONS = [
 type AssetsPanelProps = {
   settings: ThemeSettings;
   backgroundName?: string;
+  backgroundPresetId?: BackgroundPresetId;
+  backgroundPresetColors: BackgroundPresetColorMap;
   fontName: string;
   onBackground: (file: File) => void | Promise<void>;
+  onBackgroundPreset: (id: BackgroundPresetId) => void;
+  onBackgroundPresetColor: (key: BackgroundPresetColorKey, value: string) => void;
   onFont: (file: File) => void | Promise<void>;
   onLoadSample: () => void | Promise<void>;
   onDownloadTemplate: () => void;
@@ -51,6 +64,14 @@ const AssetsPanel: Component<AssetsPanelProps> = (props) => (
       fileName={props.backgroundName}
       onFile={props.onBackground}
     />
+    {DevBackgroundPresetPicker && (
+      <DevBackgroundPresetPicker
+        active={props.backgroundPresetId}
+        colors={props.backgroundPresetColors}
+        onSelect={props.onBackgroundPreset}
+        onColor={props.onBackgroundPresetColor}
+      />
+    )}
     <div class="asset-actions">
       <button type="button" onClick={props.onLoadSample}>Try Terminal sample</button>
       <button type="button" onClick={props.onDownloadTemplate}><ImageDown size={12} /> Download 240×160 PNG</button>

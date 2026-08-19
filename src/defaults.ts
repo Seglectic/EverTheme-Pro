@@ -5,6 +5,7 @@
 // ╰─────────────────────────────╯
 
 import type { CompilerConfig, ThemeSettings } from "./types";
+import { palettePreset } from "./palettePresets";
 
 export const DEFAULT_SETTINGS: ThemeSettings = {
   name: "my-theme",
@@ -13,14 +14,7 @@ export const DEFAULT_SETTINGS: ThemeSettings = {
   files: { style: 9, x: 1, y: 3, width: 28, height: 13, textX: 1, textY: 0 },
   scrollX: 0,
   scrollY: 0,
-  colors: {
-    background: "#111510",
-    chrome: "#29362a",
-    text: "#f1f1d2",
-    directory: "#d9bc68",
-    selection: "#bbd675",
-    selectionText: "#152015",
-  },
+  colors: { ...palettePreset("evertheme").colors },
 };
 
 export const LAYOUT_PRESETS = {

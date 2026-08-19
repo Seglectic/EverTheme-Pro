@@ -15,17 +15,35 @@ import {
   settingsToCompilerConfig,
   type LayoutPresetName,
 } from "../defaults";
+import {
+  backgroundPreset,
+  createDefaultBackgroundPresetColors,
+  generateBackgroundPreset,
+  randomBackgroundMotion,
+  randomBackgroundPreset,
+  type BackgroundPresetColorKey,
+  type BackgroundPresetId,
+} from "../lib/backgroundPresets";
 import { compileTheme } from "../lib/gbatheme";
 import { loadPixelImage, prepareBackground, prepareFont } from "../lib/image";
+import { palettePreset, type PalettePresetId } from "../palettePresets";
 import type { PixelImage, RegionSettings, ThemeColors, ThemeRegion, ThemeSettings } from "../types";
 
 const errorMessage = (error: unknown, fallback: string) => error instanceof Error ? error.message : fallback;
 
 export function createThemeEditor() {
-  const [settings, setSettings] = createStore<ThemeSettings>(structuredClone(DEFAULT_SETTINGS));
+  const initialPreset = randomBackgroundPreset();
+  const initialPresetColors = createDefaultBackgroundPresetColors();
+  const initialSettings = structuredClone(DEFAULT_SETTINGS);
+  Object.assign(initialSettings, randomBackgroundMotion(initialPreset));
+  const [settings, setSettings] = createStore<ThemeSettings>(initialSettings);
   const [font, setFont] = createSignal<PixelImage>();
-  const [background, setBackground] = createSignal<PixelImage>();
-  const [backgroundName, setBackgroundName] = createSignal<string>();
+  const [background, setBackground] = createSignal<PixelImage>(
+    generateBackgroundPreset(initialPreset, initialPresetColors[initialPreset.id]),
+  );
+  const [backgroundName, setBackgroundName] = createSignal(`Built-in · ${initialPreset.label}`);
+  const [backgroundPresetId, setBackgroundPresetId] = createSignal<BackgroundPresetId | undefined>(initialPreset.id);
+  const [backgroundPresetColors, setBackgroundPresetColors] = createSignal(initialPresetColors);
   const [fontName, setFontName] = createSignal("Official default font");
   const [message, setMessage] = createSignal("Loading the official font…");
 
@@ -62,6 +80,8 @@ export function createThemeEditor() {
       setMessage("Optimizing image for GBA…");
       setBackground(await prepareBackground(file));
       setBackgroundName(file.name);
+      setBackgroundPresetId(undefined);
+      setSettings({ scrollX: 0, scrollY: 0 });
       setMessage("Image ready · reduced to 15 colors");
     } catch (error) {
       setMessage(errorMessage(error, "Could not process that image."));
@@ -110,6 +130,7 @@ export function createThemeEditor() {
       setMessage("Loading sample…");
       setBackground(await loadPixelImage(terminalSampleUrl, 240, 160));
       setBackgroundName("Terminal sample");
+      setBackgroundPresetId(undefined);
       setSettings("colors", {
         background: "#151030",
         chrome: "#292929",
@@ -118,6 +139,7 @@ export function createThemeEditor() {
         selection: "#512878",
         selectionText: "#f8f8f8",
       });
+      setSettings({ scrollX: 0, scrollY: 0 });
       setPreset("minimal");
       setMessage("Sample loaded");
     } catch (error) {
@@ -125,10 +147,36 @@ export function createThemeEditor() {
     }
   };
 
+  const loadBackgroundPreset = (id: BackgroundPresetId) => {
+    const preset = backgroundPreset(id);
+    setBackground(generateBackgroundPreset(preset, backgroundPresetColors()[id]));
+    setBackgroundName(`Built-in · ${preset.label}`);
+    setBackgroundPresetId(id);
+    setSettings(randomBackgroundMotion(preset));
+    setMessage(`${preset.label} loaded · randomized motion`);
+  };
+
+  const setBackgroundPresetColor = (key: BackgroundPresetColorKey, value: string) => {
+    const id = backgroundPresetId();
+    if (!id) return;
+    const preset = backgroundPreset(id);
+    const current = backgroundPresetColors();
+    const colors = { ...current[id], [key]: value };
+    setBackgroundPresetColors({ ...current, [id]: colors });
+    setBackground(generateBackgroundPreset(preset, colors));
+    setMessage(`${preset.label} colors updated`);
+  };
+
   const reset = () => {
-    setSettings(structuredClone(DEFAULT_SETTINGS));
-    setBackground(undefined);
-    setBackgroundName(undefined);
+    const preset = randomBackgroundPreset();
+    const presetColors = createDefaultBackgroundPresetColors();
+    const nextSettings = structuredClone(DEFAULT_SETTINGS);
+    Object.assign(nextSettings, randomBackgroundMotion(preset));
+    setSettings(nextSettings);
+    setBackgroundPresetColors(presetColors);
+    setBackground(generateBackgroundPreset(preset, presetColors[preset.id]));
+    setBackgroundName(`Built-in · ${preset.label}`);
+    setBackgroundPresetId(preset.id);
     setMessage("Editor reset");
   };
 
@@ -153,10 +201,14 @@ export function createThemeEditor() {
     font,
     background,
     backgroundName,
+    backgroundPresetId,
+    backgroundPresetColors,
     fontName,
     message,
     compiled,
     handleBackground,
+    loadBackgroundPreset,
+    setBackgroundPresetColor,
     handleFont,
     loadSample,
     downloadBackgroundTemplate,
@@ -166,6 +218,7 @@ export function createThemeEditor() {
     },
     setName: (value: string) => setSettings("name", value),
     setColor: (key: keyof ThemeColors, value: string) => setSettings("colors", key, value),
+    setPalettePreset: (id: PalettePresetId) => setSettings("colors", { ...palettePreset(id).colors }),
     setMotion: (scrollX: number, scrollY: number) => setSettings({ scrollX, scrollY }),
     downloadTheme,
     reset,

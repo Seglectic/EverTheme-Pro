@@ -7,6 +7,7 @@
 import { For, Show, type Component } from "solid-js";
 import { safeThemeName } from "../defaults";
 import { formatBytes } from "../lib/format";
+import { matchingPalettePreset, PALETTE_PRESETS, type PalettePresetId } from "../palettePresets";
 import type { ThemeColors, ThemeSettings } from "../types";
 import { Download, RotateCcw } from "./icons";
 import MotionGrid from "./MotionGrid";
@@ -27,6 +28,7 @@ type ThemePanelProps = {
   compiled?: Uint8Array;
   onName: (value: string) => void;
   onColor: (key: keyof ThemeColors, value: string) => void;
+  onPalettePreset: (id: PalettePresetId) => void;
   onMotion: (x: number, y: number) => void;
   onDownload: () => void;
   onReset: () => void;
@@ -48,7 +50,18 @@ const ThemePanel: Component<ThemePanelProps> = (props) => (
     </div>
 
     <div class="field-group">
-      <label>Palette</label>
+      <label for="palette-preset">Palette</label>
+      <select
+        id="palette-preset"
+        class="palette-preset-select"
+        value={matchingPalettePreset(props.settings.colors)?.id ?? "custom"}
+        onChange={(event) => {
+          if (event.currentTarget.value !== "custom") props.onPalettePreset(event.currentTarget.value as PalettePresetId);
+        }}
+      >
+        <option value="custom" disabled>Custom</option>
+        <For each={PALETTE_PRESETS}>{(preset) => <option value={preset.id}>{preset.label}</option>}</For>
+      </select>
       <div class="color-list">
         <For each={Object.entries(COLOR_LABELS) as Array<[keyof ThemeColors, string]>}>
           {([key, label]) => (
