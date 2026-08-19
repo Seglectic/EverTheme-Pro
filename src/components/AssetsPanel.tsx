@@ -17,9 +17,7 @@ import AssetDropzone from "./AssetDropzone";
 import { ImageDown, SlidersHorizontal } from "./icons";
 import ThemePresetPicker from "./ThemePresetPicker";
 
-const DevBackgroundPresetPicker = import.meta.env.DEV
-  ? lazy(() => import("./BackgroundPresetPicker"))
-  : undefined;
+const BackgroundPresetPicker = lazy(() => import("./BackgroundPresetPicker"));
 
 const REGION_LABELS: Array<[ThemeRegion, string]> = [
   ["header", "Header"],
@@ -91,14 +89,12 @@ const AssetsPanel: Component<AssetsPanelProps> = (props) => {
             fileName={props.backgroundName}
             onFile={props.onBackground}
           />
-          {DevBackgroundPresetPicker && (
-            <DevBackgroundPresetPicker
-              active={props.backgroundPresetId}
-              colors={props.backgroundPresetColors}
-              onSelect={props.onBackgroundPreset}
-              onColor={props.onBackgroundPresetColor}
-            />
-          )}
+          <BackgroundPresetPicker
+            active={props.backgroundPresetId}
+            colors={props.backgroundPresetColors}
+            onSelect={props.onBackgroundPreset}
+            onColor={props.onBackgroundPresetColor}
+          />
           <div class="asset-actions">
             <button type="button" onClick={props.onLoadSample}>Try Terminal sample</button>
             <button type="button" onClick={props.onDownloadTemplate}>

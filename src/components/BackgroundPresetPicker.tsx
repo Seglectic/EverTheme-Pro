@@ -1,7 +1,7 @@
 // ╭──────────────────────────────╮
 // │  Background Preset Picker    │
-// │  Exposes development previews│
-// │  for the procedural patterns.│
+// │  Exposes procedural patterns │
+// │  and their editable colors.  │
 // ╰──────────────────────────────╯
 
 import { createMemo, For, Show, type Component } from "solid-js";
