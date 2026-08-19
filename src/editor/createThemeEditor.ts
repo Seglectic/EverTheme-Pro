@@ -26,7 +26,8 @@ import {
 } from "../lib/backgroundPresets";
 import { compileTheme } from "../lib/gbatheme";
 import { loadPixelImage, prepareBackground, prepareFont } from "../lib/image";
-import { palettePreset, SEGLECTIC_THEME_PRESET, type PalettePresetId } from "../palettePresets";
+import { palettePreset, type PalettePresetId } from "../palettePresets";
+import { themePreset, type ThemePresetId } from "../themePresets";
 import type { PixelImage, RegionSettings, ThemeColors, ThemeRegion, ThemeSettings } from "../types";
 
 const errorMessage = (error: unknown, fallback: string) => error instanceof Error ? error.message : fallback;
@@ -168,13 +169,11 @@ export function createThemeEditor() {
   };
 
   const setPalettePreset = (id: PalettePresetId) => {
-    const palette = palettePreset(id);
-    if (id !== SEGLECTIC_THEME_PRESET.id) {
-      setSettings("colors", { ...palette.colors });
-      return;
-    }
+    setSettings("colors", { ...palettePreset(id).colors });
+  };
 
-    const coordinated = SEGLECTIC_THEME_PRESET;
+  const setThemePreset = (id: ThemePresetId) => {
+    const coordinated = themePreset(id);
     const preset = backgroundPreset(coordinated.background.id);
     const colors = { ...coordinated.background.colors };
     const presetColors = { ...backgroundPresetColors(), [preset.id]: colors };
@@ -189,7 +188,7 @@ export function createThemeEditor() {
     setBackground(generateBackgroundPreset(preset, colors));
     setBackgroundName(`Built-in · ${preset.label}`);
     setBackgroundPresetId(preset.id);
-    setMessage("Seglectic palette, layout, and background loaded");
+    setMessage(`${coordinated.label} preset loaded`);
   };
 
   const reset = () => {
@@ -244,6 +243,7 @@ export function createThemeEditor() {
     setName: (value: string) => setSettings("name", value),
     setColor: (key: keyof ThemeColors, value: string) => setSettings("colors", key, value),
     setPalettePreset,
+    setThemePreset,
     setMotion: (scrollX: number, scrollY: number) => setSettings({ scrollX, scrollY }),
     downloadTheme,
     reset,

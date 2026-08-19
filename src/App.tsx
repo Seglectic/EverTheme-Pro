@@ -39,6 +39,7 @@ export default function App() {
             onDownloadTemplate={editor.downloadBackgroundTemplate}
             onPreset={editor.setPreset}
             onRegionNumber={editor.setRegionNumber}
+            onThemePreset={editor.setThemePreset}
           />
 
           <section class="preview-column">

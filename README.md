@@ -2,6 +2,8 @@
 
 Browser-based `.bgr` theme builder for the EverDrive GBA PRO. Everything runs locally; images and fonts never leave the browser.
 
+Live app: [seglectic.com/evertheme](https://www.seglectic.com/evertheme/)
+
 ## Features
 
 - Crops ordinary images to 240×160 and reduces them to 15 GBA-safe colors.
