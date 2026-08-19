@@ -1,11 +1,12 @@
-// ╭─────────────────────────────╮
-// │  GBA Canvas Preview        │
-// │  Renders the real 8×8 font │
-// │  atlas and scrolling stage.│
-// ╰─────────────────────────────╯
+// ╭──────────────────────────────╮
+// │  GBA Canvas Preview          │
+// │  Renders the real 8×8 font   │
+// │  atlas and scrolling stage.  │
+// ╰──────────────────────────────╯
 
 import { createEffect, onCleanup, type Component } from "solid-js";
 import type { PixelImage, RegionSettings, ThemeSettings } from "../types";
+import SpPreviewFrame from "./SpPreviewFrame";
 
 type ThemePreviewProps = {
   settings: ThemeSettings;
@@ -173,20 +174,9 @@ const ThemePreview: Component<ThemePreviewProps> = (props) => {
   });
 
   return (
-    <div class="device" aria-label="Game Boy Advance menu preview">
-      <div class="device-brand">
-        <span>EVERDRIVE</span>
-        <small>GBA PRO</small>
-      </div>
-      <div class="screen-bezel">
-        <canvas ref={screen} class="gba-screen" width="240" height="160" aria-label="Rendered theme screen" />
-      </div>
-      <div class="device-details" aria-hidden="true">
-        <span class="speaker-dot" />
-        <span>POWER</span>
-        <span class="device-led" />
-      </div>
-    </div>
+    <SpPreviewFrame>
+      <canvas ref={screen} class="gba-screen" width="240" height="160" aria-label="Rendered theme screen" />
+    </SpPreviewFrame>
   );
 };
 

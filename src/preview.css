@@ -1,0 +1,158 @@
+/*
+╭──────────────────────────────╮
+│  SP Preview Visuals          │
+│  Shapes the display lid and  │
+│  custom lower wordmark.      │
+╰──────────────────────────────╯
+*/
+
+@font-face {
+  font-family: "Jost";
+  font-style: italic;
+  font-display: swap;
+  font-weight: 800;
+  src: url("@fontsource/jost/files/jost-latin-800-italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Michroma";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url("@fontsource/michroma/files/michroma-latin-400-normal.woff2") format("woff2");
+}
+
+.sp-frame {
+  position: relative;
+  width: min(520px, 100%);
+  aspect-ratio: 82 / 73;
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--sp-shell-light) 72%, white);
+  border-radius: 6.2% 6.2% 7.4% 7.4%;
+  background:
+    radial-gradient(circle at 30% 14%, rgba(255,255,255,.1), transparent 29%),
+    linear-gradient(145deg, var(--sp-shell-light), var(--sp-shell-mid) 48%, var(--sp-shell-dark));
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,.2),
+    inset 0 -12px 25px rgba(0,0,0,.22),
+    0 30px 55px rgba(0,0,0,.38);
+}
+
+.sp-frame--platinum { --sp-shell-light: #d2d3ce; --sp-shell-mid: #a3a59f; --sp-shell-dark: #777a74; }
+.sp-frame--cobalt { --sp-shell-light: #3d67d3; --sp-shell-mid: #284bb0; --sp-shell-dark: #192f7b; }
+.sp-frame--onyx { --sp-shell-light: #57595c; --sp-shell-mid: #343539; --sp-shell-dark: #1b1c1f; }
+.sp-frame--flame { --sp-shell-light: #ef5b4b; --sp-shell-mid: #cc3d33; --sp-shell-dark: #8f2420; }
+.sp-frame--pearl-blue { --sp-shell-light: #9bbfe0; --sp-shell-mid: #709ac4; --sp-shell-dark: #4c7199; }
+.sp-frame--pearl-pink { --sp-shell-light: #e5a8bd; --sp-shell-mid: #c97b96; --sp-shell-dark: #9e526c; }
+.sp-frame--graphite { --sp-shell-light: #898c8f; --sp-shell-mid: #626569; --sp-shell-dark: #3d4044; }
+
+.sp-screen-stage {
+  position: absolute;
+  top: 11%;
+  left: 7%;
+  width: 86%;
+  height: 74%;
+}
+
+.sp-screen-bezel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 7.7% 6% 0;
+  border: 1px solid #171a16;
+  border-radius: 2.3%;
+  background: linear-gradient(145deg, #161916, #090b09 72%);
+  box-shadow:
+    inset 0 0 0 2px #080a08,
+    inset 0 1px rgba(255,255,255,.06),
+    0 2px 5px rgba(0,0,0,.28);
+}
+
+.gba-screen {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  background: #080b08;
+  box-shadow:
+    inset 0 0 17px rgba(0,0,0,.38),
+    0 0 0 1px #020302;
+  image-rendering: pixelated;
+}
+
+.sp-fastener {
+  position: absolute;
+  z-index: 2;
+  width: 7.2%;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--sp-shell-dark) 78%, black);
+  border-radius: 50%;
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--sp-shell-light) 86%, white),
+    color-mix(in srgb, var(--sp-shell-dark) 88%, black)
+  );
+  box-shadow:
+    inset 2px 2px 3px rgba(255,255,255,.12),
+    inset -2px -2px 3px rgba(0,0,0,.26),
+    0 1px rgba(255,255,255,.06);
+}
+
+.sp-fastener--top {
+  top: 2.4%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.sp-fastener--top-left { top: 2.4%; left: 4.4%; }
+.sp-fastener--top-right { top: 2.4%; right: 4.4%; }
+.sp-fastener--bottom-left { bottom: 3.4%; left: 4.4%; }
+.sp-fastener--bottom-right { right: 4.4%; bottom: 3.4%; }
+
+.sp-wordmark {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(5px, 1.1vw, 11px);
+  color: #a8ada2;
+  filter: drop-shadow(0 1px #020302);
+  white-space: nowrap;
+}
+
+.sp-wordmark-ever {
+  font-family: "Jost", "Arial Black", sans-serif;
+  font-size: clamp(14px, 2.35vw, 21px);
+  font-style: italic;
+  font-weight: 800;
+  letter-spacing: -.075em;
+  line-height: 1;
+}
+
+.sp-wordmark-advance {
+  font-family: "Michroma", "Arial Narrow", sans-serif;
+  font-size: clamp(8px, 1.2vw, 11px);
+  letter-spacing: -.12em;
+  line-height: 1;
+  transform: skewX(-12deg) scaleX(1.06);
+  transform-origin: center;
+}
+
+.sp-wordmark-pro {
+  padding: .42em .78em .38em;
+  border: 1px solid #a8ada2;
+  border-radius: 999px;
+  background: #181b17;
+  box-shadow: inset 0 1px rgba(255,255,255,.08), 0 1px rgba(255,255,255,.11);
+  color: #b9beb3;
+  font: 800 clamp(6px, .9vw, 8px)/1 ui-monospace, monospace;
+  letter-spacing: .12em;
+}
+
+@media (max-width: 760px) {
+  .sp-frame { width: min(470px, 100%); }
+}
