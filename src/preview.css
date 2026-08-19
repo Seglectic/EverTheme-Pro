@@ -175,14 +175,7 @@
 }
 
 .sp-wordmark-pro {
-  padding: .42em .78em .38em;
-  border: 1px solid #a8ada2;
-  border-radius: 999px;
-  background: #181b17;
-  box-shadow: inset 0 1px rgba(255,255,255,.08), 0 1px rgba(255,255,255,.11);
-  color: #b9beb3;
-  font: 800 clamp(6px, .9vw, 8px)/1 ui-monospace, monospace;
-  letter-spacing: .12em;
+  font-size: clamp(6px, .9vw, 8px);
 }
 
 @media (max-width: 760px) {

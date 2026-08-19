@@ -44,7 +44,7 @@ const AssetDropzone: Component<AssetDropzoneProps> = (props) => {
       />
       <button
         type="button"
-        class="dropzone"
+        class={`dropzone dropzone--${props.kind}`}
         classList={{ "is-dragging": dragging(), "has-file": Boolean(props.fileName) }}
         onClick={() => input.click()}
         onDragEnter={(event) => {
@@ -58,7 +58,13 @@ const AssetDropzone: Component<AssetDropzoneProps> = (props) => {
         <span class="dropzone-icon">{props.fileName ? <Check size={18} /> : <Icon size={18} />}</span>
         <span class="dropzone-copy">
           <strong>{props.title}</strong>
-          <small>{props.fileName ? `${props.fileName} · click or drop to replace` : props.description}</small>
+          <small class="dropzone-meta">
+            {props.fileName && <span class="dropzone-file">{props.fileName}</span>}
+            <span class="dropzone-hint">
+              <span>{props.fileName ? "Click or drop to replace" : props.description}</span>
+              {props.kind === "image" && <span class="dropzone-privacy">Images never leave this browser.</span>}
+            </span>
+          </small>
         </span>
       </button>
     </>

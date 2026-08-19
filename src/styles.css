@@ -60,7 +60,7 @@ button { color: inherit; }
   border: 0;
 }
 
-.app-shell { position: relative; z-index: 1; width: min(1480px, calc(100% - 48px)); margin: 52px auto 0; }
+.app-shell { position: relative; z-index: 1; width: min(1480px, calc(100% - 48px)); margin: 52px auto 0; padding-bottom: 34px; }
 
 .wordmark { position: fixed; top: 4px; left: 4px; z-index: 10; color: var(--ink); text-decoration: none; display: flex; align-items: center; gap: 10px; }
 .wordmark-mark {
@@ -73,9 +73,11 @@ button { color: inherit; }
   font: 800 13px/1 ui-monospace, monospace;
   border-radius: 2px 12px 2px 2px;
 }
-.wordmark > span:last-child { display: flex; align-items: baseline; gap: 6px; }
+.wordmark-copy { display: flex; align-items: center; gap: 7px; }
 .wordmark strong { font-size: 15px; letter-spacing: -0.03em; }
-.wordmark small { color: var(--acid); font: 700 9px/1 ui-monospace, monospace; letter-spacing: 0.12em; }
+.pro-pill { padding: .42em .78em .38em; border: 1px solid #a8ada2; border-radius: 999px; background: #181b17; box-shadow: inset 0 1px rgba(255,255,255,.08), 0 1px rgba(255,255,255,.11); color: #b9beb3; font-family: ui-monospace, monospace; font-weight: 800; line-height: 1; letter-spacing: .12em; }
+.wordmark-pro { font-size: 7px; }
+.wordmark-version { color: #747a6e; font: 700 8px/1 ui-monospace, monospace; letter-spacing: .04em; }
 
 .studio {
   position: relative;
@@ -125,7 +127,16 @@ button { color: inherit; }
 .dropzone-icon { flex: 0 0 39px; height: 39px; display: grid; place-items: center; border-radius: 50%; background: #282d23; color: var(--acid); }
 .dropzone-copy { min-width: 0; display: grid; gap: 5px; }
 .dropzone-copy strong { overflow: hidden; text-overflow: ellipsis; font-size: 13px; white-space: nowrap; }
-.dropzone-copy small { overflow: hidden; color: var(--muted); font: 10px/1.35 ui-monospace, monospace; text-overflow: ellipsis; white-space: nowrap; }
+.dropzone-copy small { color: var(--muted); font: 10px/1.35 ui-monospace, monospace; }
+.dropzone-meta { display: grid; gap: 1px; }
+.dropzone-file { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dropzone-hint { display: grid; min-height: 1.35em; }
+.dropzone-hint > span { grid-area: 1 / 1; transition: opacity .16s; }
+.dropzone-privacy { opacity: 0; color: var(--acid); }
+.dropzone--image:hover .dropzone-hint > span:first-child,
+.dropzone--image:focus-visible .dropzone-hint > span:first-child { opacity: 0; }
+.dropzone--image:hover .dropzone-privacy,
+.dropzone--image:focus-visible .dropzone-privacy { opacity: 1; }
 .background-presets { margin-top: 15px; }
 .background-presets .field-label { margin-bottom: 8px; font-size: 9px; }
 .background-preset-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; }
@@ -229,8 +240,11 @@ button { color: inherit; }
 .reset-button { width: 100%; margin-top: 13px; border: 0; background: transparent; color: #858a7d; display: flex; justify-content: center; align-items: center; gap: 7px; font-size: 10px; cursor: pointer; }
 .reset-button:hover { color: var(--ink); }
 
-.site-footer { display: flex; justify-content: space-between; gap: 30px; padding: 28px 0 44px; color: #707568; font: 9px/1.5 ui-monospace, monospace; }
+.site-footer { position: fixed; right: 5px; bottom: 4px; left: 5px; z-index: 10; display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; color: #707568; font: 8px/1.35 ui-monospace, monospace; pointer-events: none; }
 .site-footer p { margin: 0; }
+.site-footer a { color: var(--acid); font-weight: 700; text-decoration: none; pointer-events: auto; }
+.site-footer a:hover, .site-footer a:focus-visible { color: var(--ink); outline: none; text-decoration: underline; text-underline-offset: 2px; }
+.site-disclaimers { display: flex; justify-content: flex-end; gap: 14px; text-align: right; }
 
 @media (max-width: 1120px) {
   .studio { grid-template-columns: 280px 1fr; }
@@ -243,7 +257,7 @@ button { color: inherit; }
   .studio { display: flex; flex-direction: column; }
   .assets-panel, .finish-panel { padding-top: 26px; border: 0; border-bottom: 1px solid var(--line); }
   .preview-column { order: -1; padding: 72px 14px 28px; }
-  .site-footer { flex-direction: column; }
+  .site-disclaimers { display: grid; gap: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

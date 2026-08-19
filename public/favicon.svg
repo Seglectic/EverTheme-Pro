@@ -1,0 +1,11 @@
+<!--
+╭──────────────────────────────╮
+│  EverTheme Pro Favicon      │
+│  Carries the EP studio mark │
+│  into browser tabs.         │
+╰──────────────────────────────╯
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <path fill="#cbe56a" d="M4 4h38c10 0 18 8 18 18v38H4z"/>
+  <text x="32" y="40" fill="#151910" font-family="monospace" font-size="24" font-weight="800" text-anchor="middle">EP</text>
+</svg>

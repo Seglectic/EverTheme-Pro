@@ -9,6 +9,7 @@ import PixelGridBackdrop from "./components/PixelGridBackdrop";
 import ThemePanel from "./components/ThemePanel";
 import ThemePreview from "./components/ThemePreview";
 import { createThemeEditor } from "./editor/createThemeEditor";
+import { version } from "../package.json";
 
 export default function App() {
   const editor = createThemeEditor();
@@ -18,9 +19,10 @@ export default function App() {
       <PixelGridBackdrop />
       <a class="wordmark" href="#top" aria-label="EverTheme Pro home">
         <span class="wordmark-mark">EP</span>
-        <span>
+        <span class="wordmark-copy">
           <strong>EverTheme</strong>
-          <small>PRO</small>
+          <span class="pro-pill wordmark-pro">PRO</span>
+          <small class="wordmark-version">v{version}</small>
         </span>
       </a>
       <main class="app-shell" id="top">
@@ -59,8 +61,11 @@ export default function App() {
         </section>
 
         <footer class="site-footer">
-          <p>Built for EverDrive GBA PRO. EverTheme Pro is an independent tool and is not affiliated with Krikzz.</p>
-          <p>Images never leave this browser.</p>
+          <a href="https://www.seglectic.com/">Seglectic Systems</a>
+          <div class="site-disclaimers">
+            <p>Built for EverDrive GBA PRO.</p>
+            <p>Independent; not affiliated with Krikzz.</p>
+          </div>
         </footer>
       </main>
     </>

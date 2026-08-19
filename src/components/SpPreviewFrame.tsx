@@ -40,7 +40,7 @@ const SpPreviewFrame: Component<SpPreviewFrameProps> = (props) => {
           <figcaption class="sp-wordmark" aria-label="EverTheme Advance Pro">
             <span class="sp-wordmark-ever" aria-hidden="true">EverTheme</span>
             <span class="sp-wordmark-advance" aria-hidden="true">Advance</span>
-            <span class="sp-wordmark-pro" aria-hidden="true">PRO</span>
+            <span class="pro-pill sp-wordmark-pro" aria-hidden="true">PRO</span>
           </figcaption>
         </div>
       </div>
