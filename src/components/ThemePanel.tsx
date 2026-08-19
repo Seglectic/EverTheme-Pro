@@ -9,22 +9,25 @@ import { safeThemeName } from "../defaults";
 import { formatBytes } from "../lib/format";
 import type { ThemeColors, ThemeSettings } from "../types";
 import { Download, RotateCcw } from "./icons";
+import MotionGrid from "./MotionGrid";
 
 const COLOR_LABELS: Record<keyof ThemeColors, string> = {
   background: "Base",
   chrome: "Chrome",
   text: "File text",
-  directory: "Folders",
-  selection: "Selection",
+  directory: "Folder text",
+  selection: "Selected background",
   selectionText: "Selected text",
 };
+
+const visualMotionX = (scrollX: number) => -scrollX;
 
 type ThemePanelProps = {
   settings: ThemeSettings;
   compiled?: Uint8Array;
   onName: (value: string) => void;
   onColor: (key: keyof ThemeColors, value: string) => void;
-  onScroll: (key: "scrollX" | "scrollY", value: number) => void;
+  onMotion: (x: number, y: number) => void;
   onDownload: () => void;
   onReset: () => void;
 };
@@ -63,28 +66,13 @@ const ThemePanel: Component<ThemePanelProps> = (props) => (
       </div>
     </div>
 
-    <div class="field-group scroll-controls">
+    <div class="field-group motion-controls">
       <label>Background motion</label>
-      <label>
-        Horizontal <output>{props.settings.scrollX}</output>
-        <input
-          type="range"
-          min="-8"
-          max="8"
-          value={props.settings.scrollX}
-          onInput={(event) => props.onScroll("scrollX", Number(event.currentTarget.value))}
-        />
-      </label>
-      <label>
-        Vertical <output>{props.settings.scrollY}</output>
-        <input
-          type="range"
-          min="-8"
-          max="8"
-          value={props.settings.scrollY}
-          onInput={(event) => props.onScroll("scrollY", Number(event.currentTarget.value))}
-        />
-      </label>
+      <MotionGrid
+        x={visualMotionX(props.settings.scrollX)}
+        y={props.settings.scrollY}
+        onCommit={(x, y) => props.onMotion(visualMotionX(x), y)}
+      />
     </div>
 
     <div class="export-card">

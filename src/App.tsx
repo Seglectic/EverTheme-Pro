@@ -10,7 +10,6 @@ import PixelGridBackdrop from "./components/PixelGridBackdrop";
 import ThemePanel from "./components/ThemePanel";
 import ThemePreview from "./components/ThemePreview";
 import { createThemeEditor } from "./editor/createThemeEditor";
-import { formatBytes } from "./lib/format";
 
 export default function App() {
   const editor = createThemeEditor();
@@ -47,16 +46,7 @@ export default function App() {
           />
 
           <section class="preview-column">
-            <div class="preview-labels">
-              <span>Live preview</span>
-              <span>240 × 160</span>
-            </div>
             <ThemePreview settings={editor.settings} background={editor.background()} font={editor.font()} />
-            <div class="status-strip">
-              <span class="status-light" />
-              <span>{editor.message()}</span>
-              <span class="status-size">{editor.compiled() ? formatBytes(editor.compiled()!.length) : "— KB"}</span>
-            </div>
           </section>
 
           <ThemePanel
@@ -64,7 +54,7 @@ export default function App() {
             compiled={editor.compiled()}
             onName={editor.setName}
             onColor={editor.setColor}
-            onScroll={editor.setScroll}
+            onMotion={editor.setMotion}
             onDownload={editor.downloadTheme}
             onReset={editor.reset}
           />

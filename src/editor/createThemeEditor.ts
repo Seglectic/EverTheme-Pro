@@ -166,7 +166,7 @@ export function createThemeEditor() {
     },
     setName: (value: string) => setSettings("name", value),
     setColor: (key: keyof ThemeColors, value: string) => setSettings("colors", key, value),
-    setScroll: (key: "scrollX" | "scrollY", value: number) => setSettings(key, value),
+    setMotion: (scrollX: number, scrollY: number) => setSettings({ scrollX, scrollY }),
     downloadTheme,
     reset,
   };

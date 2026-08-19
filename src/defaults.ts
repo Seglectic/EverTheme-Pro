@@ -65,9 +65,9 @@ export function settingsToCompilerConfig(
 ): CompilerConfig {
   const palettes = Array.from({ length: 16 }, () => Array<number>(16).fill(0));
   palettes[0] = makePalette(settings.colors.background, settings.colors.chrome, settings.colors.text);
-  palettes[1] = makePalette(settings.colors.background, settings.colors.chrome, settings.colors.selectionText);
-  palettes[2] = makePalette(settings.colors.background, settings.colors.selection, settings.colors.directory);
-  palettes[3] = makePalette(settings.colors.background, settings.colors.chrome, settings.colors.text);
+  palettes[1] = makePalette(settings.colors.background, settings.colors.chrome, settings.colors.text);
+  palettes[2] = makePalette(settings.colors.background, settings.colors.chrome, settings.colors.directory);
+  palettes[3] = makePalette(settings.colors.background, settings.colors.selection, settings.colors.selectionText);
 
   return {
     header: { ...settings.header, palette: 1 },
@@ -77,10 +77,10 @@ export function settingsToCompilerConfig(
       backgroundPalette: 0,
       filePalette: 0,
       directoryPalette: 2,
-      selectionPalette: 0x12,
+      selectionPalette: 0x13,
       borderPalette: 1,
     },
-    menuPalettes: [0x10, 0x12, 0x10, 0x12, 0x11, 0x11, 0x11],
+    menuPalettes: [0x10, 0x13, 0x10, 0x12, 0x11, 0x11, 0x11],
     scrollX: settings.scrollX,
     scrollY: settings.scrollY,
     scrollXEnabled: settings.scrollX !== 0,
