@@ -124,6 +124,11 @@ export async function prepareBackground(file: File) {
   return quantizeImage(canvasPixels(bitmap, 240, 160, "cover"));
 }
 
+export async function prepareMiniBackground(file: File) {
+  const bitmap = await loadBitmap(file);
+  return quantizeImage(canvasPixels(bitmap, 224, 144, "cover"));
+}
+
 export async function loadPixelImage(source: Blob | string, width: number, height: number) {
   const bitmap = await loadBitmap(source);
   return canvasPixels(bitmap, width, height, "stretch");

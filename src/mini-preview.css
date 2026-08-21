@@ -1,0 +1,143 @@
+/*
+╭──────────────────────────────╮
+│  GBA Mini Preview Visuals    │
+│  Shapes the original GBA     │
+│  shell and display lens.     │
+╰──────────────────────────────╯
+*/
+
+.gba-mini-frame {
+  position: relative;
+  width: min(350px, 100%);
+  aspect-ratio: 1.76;
+  margin: 0 auto;
+  padding: 2.2% 3% 2.8%;
+  border: 1px solid #8b87a2;
+  border-radius: 13% 13% 19% 19% / 18% 18% 23% 23%;
+  background:
+    radial-gradient(circle at 28% 12%, rgba(255,255,255,.16), transparent 26%),
+    linear-gradient(145deg, #77728f, #514d68 52%, #343244);
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,.2),
+    inset 0 -12px 25px rgba(0,0,0,.24),
+    0 30px 55px rgba(0,0,0,.38);
+}
+
+.gba-mini-lens {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid #11141c;
+  border-radius: 7% 7% 15% 15% / 10% 10% 18% 18%;
+  background:
+    radial-gradient(circle at 68% 9%, rgba(255,255,255,.08), transparent 32%),
+    linear-gradient(155deg, #242838, #11131d 72%);
+  box-shadow: inset 0 0 0 2px rgba(4,5,8,.62), 0 2px 5px rgba(0,0,0,.3);
+}
+
+.gba-mini-screen-stage {
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  width: 240px;
+  height: 160px;
+  padding: 0;
+  border: 0;
+  transform: translateX(-50%);
+  overflow: hidden;
+  background: #10140f;
+  color: inherit;
+  box-shadow: inset 0 0 18px rgba(0,0,0,.42), 0 0 0 1px #020302;
+  cursor: pointer;
+  image-rendering: pixelated;
+}
+
+.gba-mini-screen-stage:focus-visible { outline: 2px solid var(--acid); outline-offset: 3px; }
+.gba-mini-screen-stage:disabled { cursor: progress; }
+
+.gba-mini-screen-drop-hint {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(7,10,6,.86);
+  color: var(--acid);
+  font: 800 8px/1 ui-monospace, monospace;
+  letter-spacing: .1em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .15s;
+}
+
+.gba-mini-screen-stage:hover .gba-mini-screen-drop-hint,
+.gba-mini-screen-stage:focus-visible .gba-mini-screen-drop-hint,
+.gba-mini-screen-stage.is-dragging .gba-mini-screen-drop-hint,
+.gba-mini-screen-stage.is-checking .gba-mini-screen-drop-hint { opacity: 1; }
+
+.gba-mini-power {
+  position: absolute;
+  top: 23%;
+  left: 2.1%;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  color: #7a7e8c;
+  font: 700 4px/1 ui-monospace, monospace;
+  letter-spacing: .05em;
+}
+
+.gba-mini-power i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #c65c50;
+  box-shadow: 0 0 5px rgba(198,92,80,.7);
+}
+
+.gba-mini-wordmark {
+  position: absolute;
+  right: 0;
+  bottom: 2.8%;
+  left: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 7px;
+  color: #84899a;
+  white-space: nowrap;
+}
+
+.gba-mini-wordmark strong {
+  font-family: "Jost", "Arial Black", sans-serif;
+  font-size: 10px;
+  font-style: italic;
+  letter-spacing: -.06em;
+}
+
+.gba-mini-wordmark span {
+  font-family: "Michroma", "Arial Narrow", sans-serif;
+  font-size: 6px;
+  letter-spacing: -.08em;
+}
+
+.gba-mini-wordmark small {
+  padding: 3px 6px;
+  border-radius: 999px;
+  background: #080a0f;
+  color: #a9adba;
+  font: 800 5px/1 ui-monospace, monospace;
+  letter-spacing: .08em;
+}
+
+@container preview (min-width: 700px) {
+  .gba-mini-frame { width: 700px; }
+  .gba-mini-screen-stage { width: 480px; height: 320px; }
+  .gba-mini-power { gap: 8px; font-size: 8px; }
+  .gba-mini-power i { width: 8px; height: 8px; }
+  .gba-mini-wordmark { gap: 14px; }
+  .gba-mini-wordmark strong { font-size: 20px; }
+  .gba-mini-wordmark span { font-size: 12px; }
+  .gba-mini-wordmark small { padding: 6px 12px; font-size: 10px; }
+  .gba-mini-screen-drop-hint { font-size: 16px; }
+}

@@ -3,3 +3,13 @@ dist/
 *.tsbuildinfo
 .DS_Store
 *.log
+
+# Local reverse-engineering notes and private cartridge artifacts.
+/docs/
+/hack/
+*.gba
+*.ips
+*.sav
+*.srm
+*.ss0
+*.img
