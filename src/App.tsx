@@ -40,7 +40,7 @@ export default function App() {
         <footer class="site-footer">
           <a href="https://www.seglectic.com/">Seglectic Systems</a>
           <div class="site-disclaimers">
-            <p>Built for EverDrive GBA {deviceMode() === "pro" ? "PRO" : "Mini / X5"}.</p>
+            <p>Built for EverDrive GBA {deviceMode() === "pro" ? "PRO" : "Mini"}.</p>
             <p>Independent; not affiliated with Krikzz.</p>
           </div>
         </footer>

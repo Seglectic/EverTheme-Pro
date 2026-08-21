@@ -34,7 +34,7 @@ const DeviceModeSwitch: Component<DeviceModeSwitchProps> = (props) => (
         aria-selected={props.mode === "mini"}
         onClick={() => props.onChange("mini")}
       >
-        GBA Mini <small>X5</small>
+        GBA Mini
       </button>
     </div>
   </nav>

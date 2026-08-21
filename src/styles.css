@@ -69,7 +69,7 @@ button { color: inherit; }
 .app-shell { position: relative; z-index: 1; width: min(1480px, calc(100% - 48px)); margin: 52px auto 0; padding-bottom: 34px; }
 .app-shell.is-mini {
   width: min(1760px, calc(100% - 40px));
-  margin-top: 64px;
+  margin-top: 52px;
   padding-bottom: 42px;
   --type-micro: 11px;
   --type-caption: 12px;
@@ -102,7 +102,6 @@ button { color: inherit; }
 .device-mode-tabs button { border: 0; border-radius: 3px; background: transparent; color: #92978a; padding: 12px 20px; font: 750 14px/1 ui-monospace, monospace; letter-spacing: .05em; cursor: pointer; }
 .device-mode-tabs button:hover, .device-mode-tabs button:focus-visible { color: var(--ink); outline: none; }
 .device-mode-tabs button[aria-selected="true"] { background: var(--acid); color: #151910; }
-.device-mode-tabs small { margin-left: 4px; font-size: 10px; opacity: .68; }
 
 .studio {
   position: relative;
@@ -271,10 +270,17 @@ button { color: inherit; }
 .site-footer a:hover, .site-footer a:focus-visible { color: var(--ink); outline: none; text-decoration: underline; text-underline-offset: 2px; }
 .site-disclaimers { display: flex; justify-content: flex-end; gap: 14px; text-align: right; }
 
-@media (max-width: 1120px) {
-  .studio { grid-template-columns: 280px 1fr; }
+@media (max-width: 1580px) {
+  .studio { grid-template-columns: minmax(280px, 340px) 1fr; }
   .preview-column { grid-column: 2; grid-row: 1 / span 2; }
   .finish-panel { grid-column: 1; border-left: 0; border-top: 1px solid var(--line); border-right: 1px solid var(--line); }
+}
+
+@media (max-width: 1180px) {
+  .studio { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .preview-column { grid-column: 1 / -1; grid-row: 1; min-height: 665px; }
+  .assets-panel { grid-column: 1; grid-row: 2; border-top: 1px solid var(--line); }
+  .finish-panel { grid-column: 2; grid-row: 2; border-top: 1px solid var(--line); border-right: 0; border-left: 1px solid var(--line); }
 }
 
 @media (max-width: 760px) {
@@ -283,7 +289,7 @@ button { color: inherit; }
   .device-mode-tabs { width: 100%; min-width: 0; }
   .studio { display: flex; flex-direction: column; }
   .assets-panel, .finish-panel { padding-top: 26px; border: 0; border-bottom: 1px solid var(--line); }
-  .preview-column { order: -1; padding: 72px 14px 28px; }
+  .preview-column { min-height: 0; order: -1; padding: 72px 14px 28px; }
   .site-disclaimers { display: grid; gap: 0; }
 }
 
