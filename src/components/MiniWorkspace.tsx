@@ -9,6 +9,7 @@ import type { createMiniEditor } from "../editor/createMiniEditor";
 import type { MiniPaletteRole } from "../mini/palette";
 import AssetDropzone from "./AssetDropzone";
 import GbaMiniPreviewFrame from "./GbaMiniPreviewFrame";
+import { ImageDown } from "./icons";
 import MiniMenuPreview from "./MiniMenuPreview";
 import MiniPalettePanel from "./MiniPalettePanel";
 import PaletteConnector from "./PaletteConnector";
@@ -35,11 +36,11 @@ const MiniWorkspace: Component<MiniWorkspaceProps> = (props) => {
         when={props.editor.identification()}
         fallback={
           <div class="mini-rom-status mini-rom-status--idle" role="status">
-            <strong>{props.editor.loadState() === "error" ? "Could not read this file" : "Design now · add GBAOS later"}</strong>
+            <strong>{props.editor.loadState() === "error" ? "Could not read this file" : "Patches stock GBAOS v1.17"}</strong>
             <p>
               {props.editor.loadState() === "error"
                 ? props.editor.loadError()
-                : "Palette, presets, and backgrounds are ready. Drop stock v1.17 into the screen when you want to download."}
+                : "Build your palette and background, then drop GBAOS.gba onto the screen when you're ready to patch it."}
             </p>
           </div>
         }
@@ -73,11 +74,16 @@ const MiniWorkspace: Component<MiniWorkspaceProps> = (props) => {
           fileName={props.editor.backgroundName()}
           onFile={props.editor.handleBackground}
         />
-        <Show when={props.editor.backgroundName()}>
-          <button class="mini-use-solid-button" type="button" onClick={props.editor.clearBackground}>
-            Remove image · use solid color
+        <div class="mini-background-actions">
+          <button type="button" onClick={props.editor.downloadBackgroundTemplate}>
+            <ImageDown size={14} /> Download 224×144 PNG
           </button>
-        </Show>
+          <Show when={props.editor.backgroundName()}>
+            <button type="button" onClick={props.editor.clearBackground}>
+              Remove image · use solid color
+            </button>
+          </Show>
+        </div>
         <p>Center-cropped to 224×144 and reduced to 15 GBA colors.</p>
       </div>
     </aside>

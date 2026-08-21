@@ -46,7 +46,7 @@ const MiniMenuPreview: Component<MiniMenuPreviewProps> = (props) => {
         <li class="is-rom">MARIO.GBA</li>
         <li class="is-rom">ZELDA.GBA</li>
       </ol>
-      <Show when={props.inspectRole === "menuHeader"}>
+      <Show when={props.inspectRole === "menuHeader" || props.inspectRole === "menuChrome"}>
         <aside class="mini-menu-popup" aria-label="GBAOS File Menu palette preview">
           <strong>File Menu</strong>
           <span class="is-popup-selected" data-palette-target="menuHeader" data-palette-anchor-x="1">Start Game</span>

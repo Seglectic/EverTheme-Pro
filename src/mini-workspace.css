@@ -57,19 +57,23 @@
 .mini-background-controls { margin-top: 30px; padding-top: 26px; border-top: 1px solid #30352b; }
 .mini-background-controls > p { margin: 12px 2px 0; color: #858b7e; font-size: var(--type-caption); line-height: 1.5; }
 .mini-background-controls .dropzone { min-height: 112px; }
-.mini-use-solid-button {
+.mini-background-actions { display: grid; gap: 4px; margin-top: 8px; }
+.mini-background-actions button {
   width: 100%;
-  margin-top: 8px;
   border: 0;
   background: transparent;
   color: #a6aa9a;
   padding: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   font: 700 var(--type-caption)/1 ui-monospace, monospace;
   text-decoration: underline;
   text-underline-offset: 3px;
   cursor: pointer;
 }
-.mini-use-solid-button:hover, .mini-use-solid-button:focus-visible { color: var(--acid); outline: none; }
+.mini-background-actions button:hover, .mini-background-actions button:focus-visible { color: var(--acid); outline: none; }
 
 .mini-menu-preview {
   --mini-screen-scale: 1;

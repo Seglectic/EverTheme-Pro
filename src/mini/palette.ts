@@ -1,6 +1,6 @@
 // ╭──────────────────────────────╮
 // │  Mini Palette Model          │
-// │  Names the five direct GBAOS │
+// │  Names the six direct GBAOS  │
 // │  v1.17 color roles.          │
 // ╰──────────────────────────────╯
 
@@ -18,12 +18,12 @@ export type MiniPaletteRole =
 export type MiniPalette = Record<MiniPaletteRole, string>;
 
 export const MINI_PALETTE_LABELS: Record<MiniPaletteRole, string> = {
-  background: "Solid background (no image)",
-  basicText: "Page + selected item text",
-  romText: "ROM text",
-  folderText: "Folder + popup text",
-  menuHeader: "Popup selection fill",
-  menuChrome: "Page/footer + popup fill",
+  background: "Background",
+  basicText: "Title + Selected Text",
+  romText: "ROM Text",
+  folderText: "Folder + Popup Text",
+  menuHeader: "Popup Selection",
+  menuChrome: "Header/Footer Popup Fill",
 };
 
 export const STOCK_MINI_PALETTE: MiniPalette = {
@@ -46,7 +46,7 @@ export const MINI_PALETTE_PRESETS = [
     label: preset.label,
     colors: quantizePalette({
       background: preset.colors.background,
-      basicText: preset.colors.selectionText,
+      basicText: preset.id === "evertheme" ? preset.colors.text : preset.colors.selectionText,
       romText: preset.colors.text,
       folderText: preset.colors.directory,
       menuHeader: preset.colors.selection,
