@@ -4,9 +4,11 @@
 // │  editor behind one boundary. │
 // ╰──────────────────────────────╯
 
-import type { Component } from "solid-js";
+import { createSignal, type Component } from "solid-js";
 import type { createThemeEditor } from "../editor/createThemeEditor";
+import type { ThemeColors } from "../types";
 import AssetsPanel from "./AssetsPanel";
+import PaletteConnector from "./PaletteConnector";
 import ThemePanel from "./ThemePanel";
 import ThemePreview from "./ThemePreview";
 
@@ -14,14 +16,17 @@ type ProWorkspaceProps = {
   editor: ReturnType<typeof createThemeEditor>;
 };
 
-const ProWorkspace: Component<ProWorkspaceProps> = (props) => (
-  <section
-    id="pro-workspace"
-    class="studio"
-    role="tabpanel"
-    aria-labelledby="device-mode-pro"
-    aria-label="GBA Pro theme editor"
-  >
+const ProWorkspace: Component<ProWorkspaceProps> = (props) => {
+  const [activeRole, setActiveRole] = createSignal<keyof ThemeColors>();
+
+  return (
+    <section
+      id="pro-workspace"
+      class="studio"
+      role="tabpanel"
+      aria-labelledby="device-mode-pro"
+      aria-label="GBA Pro theme editor"
+    >
     <AssetsPanel
       settings={props.editor.settings}
       backgroundName={props.editor.backgroundName()}
@@ -44,11 +49,13 @@ const ProWorkspace: Component<ProWorkspaceProps> = (props) => (
         settings={props.editor.settings}
         background={props.editor.background()}
         font={props.editor.font()}
+        inspectRole={activeRole()}
       />
     </section>
 
     <ThemePanel
       settings={props.editor.settings}
+      solidBackground={props.editor.backgroundPresetId() === "solid"}
       compiled={props.editor.compiled()}
       onName={props.editor.setName}
       onColor={props.editor.setColor}
@@ -56,8 +63,11 @@ const ProWorkspace: Component<ProWorkspaceProps> = (props) => (
       onMotion={props.editor.setMotion}
       onDownload={props.editor.downloadTheme}
       onReset={props.editor.reset}
+      onActiveRole={setActiveRole}
     />
-  </section>
-);
+    <PaletteConnector rootId="pro-workspace" role={activeRole()} colors={props.editor.settings.colors} />
+    </section>
+  );
+};
 
 export default ProWorkspace;

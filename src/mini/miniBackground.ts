@@ -5,7 +5,7 @@
 // ╰──────────────────────────────╯
 
 import type { PixelImage } from "../types";
-import { rgb888ToBgr555 } from "./gbaColor";
+import { rgb888ToBgr555 } from "../lib/gbaColor";
 
 export const MINI_BACKGROUND_WIDTH = 224;
 export const MINI_BACKGROUND_HEIGHT = 144;

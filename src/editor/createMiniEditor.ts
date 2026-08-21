@@ -7,6 +7,7 @@
 import { createMemo, createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
 import { prepareMiniBackground } from "../lib/image";
+import { quantizeGbaColor } from "../lib/gbaColor";
 import type { PixelImage } from "../types";
 import { identifyGbaOs, type MiniRomIdentification } from "../mini/romIdentity";
 import { encodeMiniBackground, encodeMiniSolidBackground, type MiniBackgroundAssets } from "../mini/miniBackground";
@@ -18,7 +19,6 @@ import {
   type MiniPalettePresetId,
   type MiniPaletteRole,
 } from "../mini/palette";
-import { quantizeMiniColor } from "../mini/gbaColor";
 import { patchGbaOsPalette } from "../mini/patchGbaOs";
 
 export type MiniRomLoadState = "idle" | "checking" | "checked" | "error";
@@ -34,7 +34,7 @@ const downloadBlob = (blob: Blob, name: string) => {
   window.setTimeout(() => URL.revokeObjectURL(url), 0);
 };
 
-export const createMiniEditor = () => {
+export const createMiniEditor = (initialPalette: MiniPalette = STOCK_MINI_PALETTE) => {
   const [fileName, setFileName] = createSignal("");
   const [rom, setRom] = createSignal<Uint8Array>();
   const [identification, setIdentification] = createSignal<MiniRomIdentification>();
@@ -44,7 +44,7 @@ export const createMiniEditor = () => {
   const [background, setBackground] = createSignal<PixelImage>();
   const [backgroundAssets, setBackgroundAssets] = createSignal<MiniBackgroundAssets>();
   const [backgroundName, setBackgroundName] = createSignal("");
-  const [palette, setPalette] = createStore<MiniPalette>({ ...STOCK_MINI_PALETTE });
+  const [palette, setPalette] = createStore<MiniPalette>({ ...initialPalette });
   let requestId = 0;
 
   const hasSolidBackground = createMemo(() => palette.background !== STOCK_MINI_PALETTE.background);
@@ -85,7 +85,7 @@ export const createMiniEditor = () => {
   };
 
   const setColor = (role: MiniPaletteRole, value: string) => {
-    setPalette(role, quantizeMiniColor(value));
+    setPalette(role, quantizeGbaColor(value));
     setMessage(role === "background" && backgroundName()
       ? "Solid background updated · remove the loaded image to reveal it."
       : "Palette updated · GBA colors are quantized to 15-bit.");

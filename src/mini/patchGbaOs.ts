@@ -6,7 +6,7 @@
 
 import { GBAOS_ROM_SIZE, SUPPORTED_GBAOS_VERSION } from "./romIdentity";
 import type { MiniPalette, MiniPaletteRole } from "./palette";
-import { bgr555ToHex, rgb888ToBgr555 } from "./gbaColor";
+import { bgr555ToHex, rgb888ToBgr555 } from "../lib/gbaColor";
 
 type MiniPaletteWrite = {
   role: MiniPaletteRole;

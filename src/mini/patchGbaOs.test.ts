@@ -7,7 +7,7 @@
 import { describe, expect, it } from "vitest";
 import { GBAOS_ROM_SIZE } from "./romIdentity";
 import { matchingMiniPalettePreset, miniPalettePreset, STOCK_MINI_PALETTE } from "./palette";
-import { bgr555ToHex, quantizeMiniColor, rgb888ToBgr555 } from "./gbaColor";
+import { bgr555ToHex, quantizeGbaColor, rgb888ToBgr555 } from "../lib/gbaColor";
 import {
   MINI_PALETTE_WRITES,
   patchGbaOsPalette,
@@ -25,7 +25,7 @@ describe("Mini BGR555 colors", () => {
     expect(rgb888ToBgr555("#00ff00")).toBe(0x03e0);
     expect(rgb888ToBgr555("#0000ff")).toBe(0x7c00);
     expect(bgr555ToHex(0x27bd)).toBe("#efef4a");
-    expect(quantizeMiniColor("#d4531a")).toBe("#d65218");
+    expect(quantizeGbaColor("#d4531a")).toBe("#d65218");
   });
 
   it("rejects malformed CSS colors", () => {

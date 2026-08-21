@@ -1,6 +1,6 @@
 // ╭──────────────────────────────╮
 // │  Mini Menu Preview           │
-// │  Visualizes the five verified│
+// │  Visualizes six verified     │
 // │  GBAOS palette roles.        │
 // ╰──────────────────────────────╯
 
@@ -21,7 +21,7 @@ const MiniMenuPreview: Component<MiniMenuPreviewProps> = (props) => {
   return (
     <div
       class="mini-menu-preview"
-      data-mini-role-target="background"
+      data-palette-target="background"
       style={{
         "--mini-background": backgroundUrl() ? "#050704" : props.colors.background,
         "--mini-basic-text": props.colors.basicText,
@@ -32,16 +32,16 @@ const MiniMenuPreview: Component<MiniMenuPreviewProps> = (props) => {
         "background-image": backgroundUrl() ? `url(${backgroundUrl()})` : undefined,
       }}
     >
-      <header class="mini-menu-page" data-mini-role-target="menuChrome">
+      <header class="mini-menu-page" data-palette-target="menuChrome" data-palette-anchor-x="0.8">
         <span>Pages: 1 of 1</span>
       </header>
       <ol class="mini-menu-files" aria-label="GBAOS palette preview file list">
-        <li class="is-folder" data-mini-role-target="folderText">GBASYS</li>
-        <li class="is-rom" data-mini-role-target="romText">ADVANCE.GBA</li>
+        <li class="is-folder"><span data-palette-target="folderText">GBASYS</span></li>
+        <li class="is-rom"><span data-palette-target="romText">ADVANCE.GBA</span></li>
         <li class="is-rom">CASTLE.GBA</li>
         <li class="is-rom">GOLDENSU.GBA</li>
         <li class="is-rom">MARIOLND.GBA</li>
-        <li class="is-selected" data-mini-role-target="basicText" aria-current="true">METROID.GBA</li>
+        <li class="is-selected" aria-current="true"><span data-palette-target="basicText">METROID.GBA</span></li>
         <li class="is-rom">MINISH.GBA</li>
         <li class="is-rom">MARIO.GBA</li>
         <li class="is-rom">ZELDA.GBA</li>
@@ -49,7 +49,7 @@ const MiniMenuPreview: Component<MiniMenuPreviewProps> = (props) => {
       <Show when={props.inspectRole === "menuHeader"}>
         <aside class="mini-menu-popup" aria-label="GBAOS File Menu palette preview">
           <strong>File Menu</strong>
-          <span class="is-popup-selected" data-mini-role-target="menuHeader">Start Game</span>
+          <span class="is-popup-selected" data-palette-target="menuHeader" data-palette-anchor-x="1">Start Game</span>
           <span>Cheats</span>
           <span>Game Data</span>
           <span>Rom Info</span>

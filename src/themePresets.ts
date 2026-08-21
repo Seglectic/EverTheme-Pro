@@ -33,7 +33,7 @@ export const THEME_PRESETS = [
       selectionText: "#152015",
     },
     regions: {
-      header: { style: 1, x: 15, y: 19, width: 24, height: 1, textX: 0, textY: 0 },
+      header: { style: 1, x: 15, y: 19, width: 30, height: 1, textX: 0, textY: 0 },
       files: { style: 9, x: 0, y: 0, width: 30, height: 18, textX: 0, textY: 0 },
       footer: { style: 1, x: 0, y: 18, width: 30, height: 2, textX: 0, textY: 0 },
     },

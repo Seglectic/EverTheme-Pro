@@ -5,6 +5,7 @@
 // ╰─────────────────────────────╯
 
 import type { CompilerConfig, ThemeSettings } from "./types";
+import { quantizeGbaPalette } from "./lib/gbaColor";
 import { palettePreset } from "./palettePresets";
 
 export const DEFAULT_SETTINGS: ThemeSettings = {
@@ -14,7 +15,7 @@ export const DEFAULT_SETTINGS: ThemeSettings = {
   files: { style: 9, x: 1, y: 3, width: 28, height: 13, textX: 1, textY: 0 },
   scrollX: 0,
   scrollY: 0,
-  colors: { ...palettePreset("evertheme").colors },
+  colors: quantizeGbaPalette({ ...palettePreset("evertheme").colors }),
 };
 
 export const LAYOUT_PRESETS = {

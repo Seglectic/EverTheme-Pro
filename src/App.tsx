@@ -4,7 +4,7 @@
 // │  through the shared shell.  │
 // ╰─────────────────────────────╯
 
-import { createSignal, Show } from "solid-js";
+import { createEffect, createSignal, Show } from "solid-js";
 import DeviceModeSwitch from "./components/DeviceModeSwitch";
 import MiniWorkspace from "./components/MiniWorkspace";
 import PixelGridBackdrop from "./components/PixelGridBackdrop";
@@ -12,24 +12,51 @@ import ProWorkspace from "./components/ProWorkspace";
 import type { DeviceMode } from "./deviceModes";
 import { createMiniEditor } from "./editor/createMiniEditor";
 import { createThemeEditor } from "./editor/createThemeEditor";
+import { decodeShareState, encodeShareState } from "./lib/shareState";
 import { version } from "../package.json";
 
 export default function App() {
-  const editor = createThemeEditor();
-  const miniEditor = createMiniEditor();
-  const [deviceMode, setDeviceMode] = createSignal<DeviceMode>("pro");
+  const shared = decodeShareState(new URL(window.location.href).searchParams.get("s"));
+  const editor = createThemeEditor(shared?.mode === "pro" ? shared.pro : undefined);
+  const miniEditor = createMiniEditor(shared?.mode === "mini" ? shared.miniPalette : undefined);
+  const [deviceMode, setDeviceMode] = createSignal<DeviceMode>(shared?.mode ?? "pro");
+
+  createEffect(() => {
+    const encoded = deviceMode() === "mini"
+      ? encodeShareState({ mode: "mini", miniPalette: { ...miniEditor.palette } })
+      : (() => {
+        const backgroundPresetId = editor.backgroundPresetId() ?? "solid";
+        return encodeShareState({
+          mode: "pro",
+          pro: {
+            settings: editor.settings,
+            backgroundPresetId,
+            backgroundColors: { ...editor.backgroundPresetColors()[backgroundPresetId] },
+          },
+        });
+      })();
+    const url = new URL(window.location.href);
+    url.searchParams.set("s", encoded);
+    url.hash = "";
+    if (url.href !== window.location.href) window.history.replaceState(window.history.state, "", url);
+  });
 
   return (
     <>
       <PixelGridBackdrop />
-      <a class="wordmark" href="#top" aria-label="EverTheme Pro home">
+      <button
+        class="wordmark"
+        type="button"
+        aria-label="Scroll to the top"
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      >
         <span class="wordmark-mark">EP</span>
         <span class="wordmark-copy">
           <strong>EverTheme</strong>
           <span class="pro-pill wordmark-pro">PRO</span>
           <small class="wordmark-version">v{version}</small>
         </span>
-      </a>
+      </button>
       <main class="app-shell" classList={{ "is-mini": deviceMode() === "mini" }} id="top">
         <DeviceModeSwitch mode={deviceMode()} onChange={setDeviceMode} />
 

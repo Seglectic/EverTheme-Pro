@@ -11,6 +11,7 @@ Live app: [seglectic.com/evertheme](https://www.seglectic.com/evertheme/)
 - Accepts prepared 128×64 font sheets and can convert TTF, OTF, or WOFF files.
 - Exports cartridge-ready `.bgr` files without `gbatheme.exe`.
 - Identifies stock Mini/X5 GBAOS v1.17, previews custom palettes and images, and downloads an install-ready `GBAOS.gba`.
+- Keeps the active Pro or Mini build scene in a compact shareable URL.
 
 Prepared font sheets give the most predictable results because menu glyphs are limited to 8×8 pixels.
 

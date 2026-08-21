@@ -10,8 +10,8 @@ import type { MiniPaletteRole } from "../mini/palette";
 import AssetDropzone from "./AssetDropzone";
 import GbaMiniPreviewFrame from "./GbaMiniPreviewFrame";
 import MiniMenuPreview from "./MiniMenuPreview";
-import MiniPaletteConnector from "./MiniPaletteConnector";
 import MiniPalettePanel from "./MiniPalettePanel";
+import PaletteConnector from "./PaletteConnector";
 import "../mini-workspace.css";
 
 type MiniWorkspaceProps = {
@@ -108,7 +108,7 @@ const MiniWorkspace: Component<MiniWorkspaceProps> = (props) => {
       onDownload={props.editor.downloadRom}
       onActiveRole={setActiveRole}
     />
-    <MiniPaletteConnector role={activeRole()} colors={props.editor.palette} />
+    <PaletteConnector rootId="mini-workspace" role={activeRole()} colors={props.editor.palette} />
     </section>
   );
 };

@@ -72,12 +72,18 @@
     0 2px 5px rgba(0,0,0,.28);
 }
 
-.gba-screen {
-  display: block;
+.gba-screen-wrap {
+  position: relative;
   flex: 0 0 auto;
   align-self: center;
   width: 240px;
   height: 160px;
+}
+
+.gba-screen {
+  display: block;
+  width: 100%;
+  height: 100%;
   cursor: pointer;
   background: #080b08;
   box-shadow:
@@ -86,10 +92,14 @@
   image-rendering: pixelated;
 }
 
+.pro-palette-target-layer { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.pro-palette-target-layer > i { position: absolute; }
+.pro-palette-target-layer > [data-palette-target="background"] { inset: 0; }
+
 /* Integer scaling keeps every native GBA pixel the same visible size. */
 @container preview (min-width: 637px) {
   .sp-frame { width: 637px; }
-  .gba-screen { width: 480px; height: 320px; }
+  .gba-screen-wrap { width: 480px; height: 320px; }
 }
 
 .sp-fastener {

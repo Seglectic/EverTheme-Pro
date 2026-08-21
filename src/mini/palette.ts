@@ -5,7 +5,7 @@
 // ╰──────────────────────────────╯
 
 import { PALETTE_PRESETS } from "../palettePresets";
-import { quantizeMiniColor } from "./gbaColor";
+import { quantizeGbaColor } from "../lib/gbaColor";
 
 export type MiniPaletteRole =
   | "background"
@@ -36,7 +36,7 @@ export const STOCK_MINI_PALETTE: MiniPalette = {
 };
 
 const quantizePalette = (colors: MiniPalette): MiniPalette => Object.fromEntries(
-  (Object.entries(colors) as Array<[MiniPaletteRole, string]>).map(([role, color]) => [role, quantizeMiniColor(color)]),
+  (Object.entries(colors) as Array<[MiniPaletteRole, string]>).map(([role, color]) => [role, quantizeGbaColor(color)]),
 ) as MiniPalette;
 
 export const MINI_PALETTE_PRESETS = [

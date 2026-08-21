@@ -127,38 +127,9 @@
 
 .mini-menu-popup strong { height: calc(12px * var(--mini-screen-scale)); color: var(--mini-basic-text); font-weight: 700; }
 .mini-menu-popup .is-popup-selected { background: var(--mini-menu-header); color: var(--mini-basic-text); }
-.mini-palette-connector {
-  position: absolute;
-  inset: 0;
-  z-index: 20;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  pointer-events: none;
-}
-
-.mini-palette-connector polyline {
-  fill: none;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  stroke-linecap: square;
-  stroke-linejoin: miter;
-  vector-effect: non-scaling-stroke;
-  animation: mini-connector-draw .52s cubic-bezier(.2,.75,.2,1) forwards;
-}
-.mini-palette-connector-shadow { stroke: rgba(5,7,4,.92); stroke-width: 6; }
-.mini-palette-connector-line { stroke: var(--mini-connector-color); stroke-width: 2; filter: drop-shadow(0 0 3px var(--mini-connector-color)); }
-.mini-palette-connector-arrow { opacity: 0; animation: mini-connector-arrow-arrive .08s linear .5s forwards; }
-.mini-palette-connector-arrow-shadow { fill: #050704; }
-.mini-palette-connector-arrow-fill { fill: var(--mini-connector-color); }
-
-@keyframes mini-connector-draw { to { stroke-dashoffset: 0; } }
-@keyframes mini-connector-arrow-arrive { to { opacity: 1; } }
 
 .mini-palette-fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
 .mini-palette-fieldset:disabled { opacity: .42; }
-.mini-color-list .color-row { grid-template-columns: 58px minmax(0, 1fr) auto; }
-.mini-color-list .color-row input[type="color"] { width: 58px; height: 42px; }
 .mini-output-controls { margin-top: 30px; }
 .mini-output-controls .export-card strong { display: block; overflow-wrap: anywhere; }
 .mini-install-note, .mini-editor-message { color: var(--muted); font-size: var(--type-caption); line-height: 1.5; }
@@ -187,9 +158,4 @@
   .mini-studio { display: flex; flex-direction: column; }
   .mini-source-panel, .mini-palette-panel { border: 0; border-bottom: 1px solid var(--line); }
   .mini-preview-column { min-height: 0; order: -1; padding: 72px 14px 32px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .mini-palette-connector polyline { stroke-dashoffset: 0; animation: none; }
-  .mini-palette-connector-arrow { opacity: 1; animation: none; }
 }

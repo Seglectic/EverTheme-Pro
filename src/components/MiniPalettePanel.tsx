@@ -15,6 +15,7 @@ import {
 } from "../mini/palette";
 import type { MiniPatchResult } from "../mini/patchGbaOs";
 import { Download } from "./icons";
+import PaletteColorList, { type PaletteColorItem } from "./PaletteColorList";
 
 type MiniPalettePanelProps = {
   romReady: boolean;
@@ -43,6 +44,18 @@ const outputSummary = (props: MiniPalettePanelProps) => {
     : "Add an image or choose colors";
 };
 
+const MINI_COLOR_CONTRAST: Record<MiniPaletteRole, MiniPaletteRole> = {
+  background: "romText",
+  basicText: "background",
+  romText: "background",
+  folderText: "background",
+  menuHeader: "basicText",
+  menuChrome: "basicText",
+};
+
+const MINI_COLOR_ITEMS = (Object.entries(MINI_PALETTE_LABELS) as Array<[MiniPaletteRole, string]>)
+  .map(([role, label]) => ({ role, label, contrastWith: MINI_COLOR_CONTRAST[role] })) satisfies Array<PaletteColorItem<MiniPaletteRole>>;
+
 const MiniPalettePanel: Component<MiniPalettePanelProps> = (props) => (
   <aside class="panel mini-palette-panel">
     <h2 class="section-heading">Palette</h2>
@@ -58,28 +71,12 @@ const MiniPalettePanel: Component<MiniPalettePanelProps> = (props) => (
         <option value="custom" disabled>Custom</option>
         <For each={MINI_PALETTE_PRESETS}>{(preset) => <option value={preset.id}>{preset.label}</option>}</For>
       </select>
-      <div class="color-list mini-color-list">
-        <For each={Object.entries(MINI_PALETTE_LABELS) as Array<[MiniPaletteRole, string]>}>
-          {([role, label]) => (
-            <label class="color-row">
-              <input
-                type="color"
-                value={props.colors[role]}
-                data-mini-palette-source={role}
-                onInput={(event) => props.onColor(role, event.currentTarget.value)}
-                onPointerEnter={() => props.onActiveRole(role)}
-                onPointerLeave={(event) => {
-                  if (document.activeElement !== event.currentTarget) props.onActiveRole();
-                }}
-                onFocus={() => props.onActiveRole(role)}
-                onBlur={() => props.onActiveRole()}
-              />
-              <span>{label}</span>
-              <code>{props.colors[role].toUpperCase()}</code>
-            </label>
-          )}
-        </For>
-      </div>
+      <PaletteColorList
+        items={MINI_COLOR_ITEMS}
+        colors={props.colors}
+        onColor={props.onColor}
+        onActiveRole={props.onActiveRole}
+      />
     </fieldset>
 
     <div class="field-group mini-output-controls">

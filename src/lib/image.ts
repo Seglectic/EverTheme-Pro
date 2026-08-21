@@ -5,6 +5,7 @@
 // ╰─────────────────────────────╯
 
 import type { PixelImage } from "../types";
+import { quantizeGbaChannel } from "./gbaColor";
 
 const FONT_EXTENSIONS = /\.(ttf|otf|woff2?)$/i;
 const GLYPH_CELL_SIZE = 8;
@@ -87,15 +88,22 @@ export function quantizeImage(image: PixelImage, limit = 15): PixelImage {
     const key = ((image.data[index] >> 3) << 10) | ((image.data[index + 1] >> 3) << 5) | (image.data[index + 2] >> 3);
     histogram.set(key, (histogram.get(key) ?? 0) + 1);
   }
-  if (histogram.size <= limit) return image;
-
-  const weightedColors: number[][] = [];
-  histogram.forEach((count, key) => {
-    const color = [((key >> 10) & 31) << 3, ((key >> 5) & 31) << 3, (key & 31) << 3];
-    const weight = Math.max(1, Math.round(Math.sqrt(count)));
-    for (let copy = 0; copy < weight; copy += 1) weightedColors.push(color);
-  });
-  const palette = medianCut(weightedColors, limit);
+  let palette: number[][];
+  if (histogram.size <= limit) {
+    palette = Array.from(histogram.keys(), (key) => [
+      quantizeGbaChannel((key >> 10) << 3),
+      quantizeGbaChannel(((key >> 5) & 31) << 3),
+      quantizeGbaChannel((key & 31) << 3),
+    ]);
+  } else {
+    const weightedColors: number[][] = [];
+    histogram.forEach((count, key) => {
+      const color = [((key >> 10) & 31) << 3, ((key >> 5) & 31) << 3, (key & 31) << 3];
+      const weight = Math.max(1, Math.round(Math.sqrt(count)));
+      for (let copy = 0; copy < weight; copy += 1) weightedColors.push(color);
+    });
+    palette = medianCut(weightedColors, limit).map((color) => color.map(quantizeGbaChannel));
+  }
   const output = new Uint8ClampedArray(image.data.length);
 
   for (let index = 0; index < image.data.length; index += 4) {

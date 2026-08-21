@@ -1,5 +1,5 @@
 // ╭──────────────────────────────╮
-// │  Palette Connector Geometry  │
+// │  Connector Geometry          │
 // │  Routes callouts with axial  │
 // │  and 45-degree segments.     │
 // ╰──────────────────────────────╯
