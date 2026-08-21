@@ -1,0 +1,168 @@
+/*
+╭──────────────────────────────╮
+│  GBA Mini Preview Visuals    │
+│  Shapes the original GBA     │
+│  shell and display lens.     │
+╰──────────────────────────────╯
+*/
+
+.gba-mini-frame {
+  --mini-lens-scale: 1;
+  position: relative;
+  width: min(calc(292px * var(--mini-lens-scale)), 100%);
+  height: calc(248px * var(--mini-lens-scale));
+  margin: 0 auto;
+}
+
+.gba-mini-lens {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 calc(18px * var(--mini-lens-scale)) calc(18px * var(--mini-lens-scale)) rgba(0,0,0,.38));
+}
+
+.gba-mini-lens-shape {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.gba-mini-lens-body {
+  stroke: #45474c;
+  stroke-width: .75;
+  vector-effect: non-scaling-stroke;
+}
+
+.gba-mini-screen-stage {
+  position: absolute;
+  top: calc(27px * var(--mini-lens-scale));
+  left: 50%;
+  z-index: 1;
+  width: calc(240px * var(--mini-lens-scale));
+  height: calc(160px * var(--mini-lens-scale));
+  padding: 0;
+  border: 0;
+  border-radius: calc(2px * var(--mini-lens-scale));
+  transform: translateX(-50%);
+  overflow: hidden;
+  background: #10140f;
+  color: inherit;
+  box-shadow:
+    inset 0 0 calc(7px * var(--mini-lens-scale)) rgba(0,0,0,.28),
+    0 0 0 calc(1px * var(--mini-lens-scale)) #303237;
+  cursor: pointer;
+  image-rendering: pixelated;
+}
+
+.gba-mini-screen-stage:focus-visible { outline: 2px solid var(--acid); outline-offset: 3px; }
+.gba-mini-screen-stage:disabled { cursor: progress; }
+
+.gba-mini-screen-drop-hint {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(7,10,6,.86);
+  color: var(--acid);
+  font: 800 8px/1 ui-monospace, monospace;
+  letter-spacing: .1em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .15s;
+}
+
+.gba-mini-screen-stage:hover .gba-mini-screen-drop-hint,
+.gba-mini-screen-stage:focus-visible .gba-mini-screen-drop-hint,
+.gba-mini-screen-stage.is-dragging .gba-mini-screen-drop-hint,
+.gba-mini-screen-stage.is-checking .gba-mini-screen-drop-hint { opacity: 1; }
+
+.gba-mini-wordmark {
+  --mini-reflect-x: 50%;
+  --mini-reflect-y: 50%;
+  --mini-reflect-opacity: .2;
+  --mini-reflect-soft-opacity: .14;
+  --mini-reflect-pill-opacity: .08;
+  position: absolute;
+  right: 18%;
+  bottom: calc(8px * var(--mini-lens-scale));
+  left: 18%;
+  z-index: 1;
+  height: calc(48px * var(--mini-lens-scale));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(6px * var(--mini-lens-scale));
+  white-space: nowrap;
+}
+
+.gba-mini-wordmark.is-reflecting {
+  --mini-reflect-opacity: .92;
+  --mini-reflect-soft-opacity: .62;
+  --mini-reflect-pill-opacity: .38;
+}
+
+.gba-mini-wordmark strong {
+  font-family: "Jost", "Arial Black", sans-serif;
+  font-size: calc(13px * var(--mini-lens-scale));
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: -.07em;
+  background:
+    radial-gradient(
+      circle at var(--mini-reflect-x) var(--mini-reflect-y),
+      rgb(255 255 255 / var(--mini-reflect-opacity)) 0 7%,
+      rgb(181 225 244 / var(--mini-reflect-soft-opacity)) 13%,
+      transparent 34%
+    ),
+    linear-gradient(105deg, #69b5dc, #e9e1ec 48%, #d88caf);
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 1px #050608);
+  transition: filter .16s;
+}
+
+.gba-mini-wordmark span {
+  font-family: "Michroma", "Arial Narrow", sans-serif;
+  font-size: calc(7.5px * var(--mini-lens-scale));
+  line-height: 1;
+  letter-spacing: -.08em;
+  background:
+    radial-gradient(
+      circle at var(--mini-reflect-x) var(--mini-reflect-y),
+      rgb(255 255 255 / var(--mini-reflect-opacity)) 0 7%,
+      rgb(229 178 219 / var(--mini-reflect-soft-opacity)) 14%,
+      transparent 35%
+    ),
+    linear-gradient(105deg, #c1d7e4, #ece6ee 42%, #d78eb4);
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 1px #050608);
+  transition: filter .16s;
+}
+
+.gba-mini-wordmark.is-reflecting strong,
+.gba-mini-wordmark.is-reflecting span { filter: brightness(1.15) drop-shadow(0 1px #050608); }
+
+.gba-mini-wordmark small {
+  padding: calc(2.5px * var(--mini-lens-scale)) calc(6px * var(--mini-lens-scale));
+  border-radius: 999px;
+  border: 1px solid #4d5056;
+  background:
+    radial-gradient(
+      circle at var(--mini-reflect-x) var(--mini-reflect-y),
+      rgb(255 255 255 / var(--mini-reflect-pill-opacity)),
+      transparent 42%
+    ),
+    #090a0c;
+  color: #c0c3ca;
+  font: 800 calc(6px * var(--mini-lens-scale))/1 ui-monospace, monospace;
+  letter-spacing: .08em;
+  box-shadow: inset 0 1px rgb(255 255 255 / .05);
+}
+
+@container preview (min-width: 584px) {
+  .gba-mini-frame { --mini-lens-scale: 2; }
+  .gba-mini-screen-drop-hint { font-size: 16px; }
+}

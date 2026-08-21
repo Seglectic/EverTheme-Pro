@@ -9,6 +9,7 @@ import {
   BACKGROUND_PRESETS,
   backgroundPreset,
   generateBackgroundPreset,
+  generateSolidBackground,
   type BackgroundPreset,
   type BackgroundPresetColorKey,
   type BackgroundPresetColorMap,
@@ -18,6 +19,7 @@ import { pixelImageUrl } from "../lib/image";
 
 type BackgroundPresetPickerProps = {
   active?: BackgroundPresetId;
+  baseColor: string;
   colors: BackgroundPresetColorMap;
   onSelect: (id: BackgroundPresetId) => void;
   onColor: (key: BackgroundPresetColorKey, value: string) => void;
@@ -31,6 +33,10 @@ const colorFields = (preset: BackgroundPreset): Array<[BackgroundPresetColorKey,
 
 const BackgroundPresetPicker: Component<BackgroundPresetPickerProps> = (props) => {
   const activePreset = createMemo(() => props.active ? backgroundPreset(props.active) : undefined);
+  const editablePreset = createMemo(() => activePreset()?.id === "solid" ? undefined : activePreset());
+  const thumbnail = (preset: BackgroundPreset) => preset.id === "solid"
+    ? generateSolidBackground(props.baseColor)
+    : generateBackgroundPreset(preset, props.colors[preset.id]);
 
   return (
     <div class="background-presets">
@@ -44,14 +50,14 @@ const BackgroundPresetPicker: Component<BackgroundPresetPickerProps> = (props) =
               aria-pressed={props.active === preset.id}
               onClick={() => props.onSelect(preset.id)}
             >
-              <img src={pixelImageUrl(generateBackgroundPreset(preset, props.colors[preset.id]))} alt="" />
+              <img src={pixelImageUrl(thumbnail(preset))} alt="" />
               <span>{preset.label}</span>
             </button>
           )}
         </For>
       </div>
 
-      <Show when={activePreset()} keyed>
+      <Show when={editablePreset()} keyed>
         {(preset) => (
           <div class="background-preset-colors">
             <span class="field-label">Pattern colors</span>

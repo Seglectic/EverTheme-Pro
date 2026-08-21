@@ -91,6 +91,7 @@ const AssetsPanel: Component<AssetsPanelProps> = (props) => {
           />
           <BackgroundPresetPicker
             active={props.backgroundPresetId}
+            baseColor={props.settings.colors.background}
             colors={props.backgroundPresetColors}
             onSelect={props.onBackgroundPreset}
             onColor={props.onBackgroundPresetColor}

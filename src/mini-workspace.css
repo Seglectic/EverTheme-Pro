@@ -1,0 +1,161 @@
+/*
+╭──────────────────────────────╮
+│  GBA Mini Workspace Visuals  │
+│  Lays out the Mini ROM editor│
+│  and live palette preview.   │
+╰──────────────────────────────╯
+*/
+
+.mini-studio {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(310px, .9fr) minmax(500px, 1.45fr) minmax(330px, .95fr);
+  min-height: 700px;
+  border: 1px solid var(--line);
+  background: rgba(19,21,17,.9);
+  box-shadow: 0 28px 80px rgba(0,0,0,.28);
+}
+
+.mini-source-panel { border-right: 1px solid var(--line); }
+.mini-palette-panel { border-left: 1px solid var(--line); }
+.mini-studio .panel { padding: clamp(22px, 2vw, 30px); }
+.mini-studio .section-heading { margin-bottom: 16px; }
+.mini-studio .section-heading::before { width: 4px; height: 14px; margin-right: 10px; }
+
+.mini-preview-column {
+  position: relative;
+  container: preview / inline-size;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: clamp(58px, 6vw, 78px) clamp(18px, 2vw, 28px) 36px;
+  background: radial-gradient(circle at 50% 36%, #30352b, #1c1f19 58%, #171a15);
+}
+
+.mini-rom-status {
+  margin-top: 0;
+  padding: 19px;
+  border: 1px solid #3a4034;
+  border-left: 3px solid var(--acid);
+  border-radius: 3px;
+  background: #121510;
+}
+
+.mini-rom-status--supported { border-left-color: var(--acid); }
+.mini-rom-status--known-unsupported { border-left-color: #e3b863; }
+.mini-rom-status--modified, .mini-rom-status--invalid { border-left-color: var(--orange); }
+.mini-rom-status strong { color: var(--ink); font-size: var(--type-control); }
+.mini-rom-status p { margin: 10px 0 0; color: var(--muted); font-size: var(--type-label); line-height: 1.55; }
+.mini-rom-facts { display: grid; gap: 8px; margin: 15px 0 0; padding-top: 13px; border-top: 1px solid #30352b; }
+.mini-rom-facts div { display: grid; gap: 4px; }
+.mini-rom-facts dt { color: #777d70; font: 700 var(--type-micro)/1 ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; }
+.mini-rom-facts dd { min-width: 0; margin: 0; color: #b8bdaf; font-size: var(--type-caption); }
+.mini-rom-facts code { display: block; overflow-wrap: anywhere; color: #919789; font-size: var(--type-micro); line-height: 1.45; }
+
+.mini-background-controls { margin-top: 30px; padding-top: 26px; border-top: 1px solid #30352b; }
+.mini-background-controls > p { margin: 12px 2px 0; color: #858b7e; font-size: var(--type-caption); line-height: 1.5; }
+.mini-background-controls .dropzone { min-height: 112px; }
+.mini-use-solid-button {
+  width: 100%;
+  margin-top: 8px;
+  border: 0;
+  background: transparent;
+  color: #a6aa9a;
+  padding: 7px;
+  font: 700 var(--type-caption)/1 ui-monospace, monospace;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.mini-use-solid-button:hover, .mini-use-solid-button:focus-visible { color: var(--acid); outline: none; }
+
+.mini-menu-preview {
+  --mini-screen-scale: 1;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--mini-background);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: calc(224px * var(--mini-screen-scale)) calc(144px * var(--mini-screen-scale));
+  color: var(--mini-basic-text);
+  font: 700 calc(7px * var(--mini-screen-scale))/calc(8px * var(--mini-screen-scale)) ui-monospace, monospace;
+  text-align: left;
+}
+
+.mini-menu-page, .mini-menu-footer {
+  height: calc(8px * var(--mini-screen-scale));
+  display: flex;
+  align-items: center;
+  background: var(--mini-menu-chrome);
+  padding: 0;
+  white-space: nowrap;
+}
+
+.mini-menu-page { color: var(--mini-basic-text); }
+.mini-menu-footer { position: absolute; right: 0; bottom: 0; left: 0; color: var(--mini-rom-text); }
+
+.mini-menu-files { margin: 0; padding: 0; list-style: none; }
+.mini-menu-files li { height: calc(8px * var(--mini-screen-scale)); padding: 0; white-space: nowrap; }
+.mini-menu-files .is-folder { color: var(--mini-folder-text); }
+.mini-menu-files .is-rom { color: var(--mini-rom-text); }
+.mini-menu-files .is-selected { color: var(--mini-basic-text); }
+
+.mini-menu-popup {
+  position: absolute;
+  top: calc(8px * var(--mini-screen-scale));
+  left: calc(48px * var(--mini-screen-scale));
+  width: calc(144px * var(--mini-screen-scale));
+  min-height: calc(136px * var(--mini-screen-scale));
+  box-sizing: border-box;
+  border: calc(1px * var(--mini-screen-scale)) solid var(--mini-basic-text);
+  background: var(--mini-menu-chrome);
+  color: var(--mini-folder-text);
+}
+
+.mini-menu-popup strong, .mini-menu-popup span {
+  width: calc(112px * var(--mini-screen-scale));
+  height: calc(16px * var(--mini-screen-scale));
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mini-menu-popup strong { height: calc(12px * var(--mini-screen-scale)); color: var(--mini-basic-text); font-weight: 700; }
+.mini-menu-popup .is-popup-selected { background: var(--mini-menu-header); color: var(--mini-basic-text); }
+
+.mini-palette-fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+.mini-palette-fieldset:disabled { opacity: .42; }
+.mini-output-controls { margin-top: 30px; }
+.mini-output-controls .export-card strong { display: block; overflow-wrap: anywhere; }
+.mini-install-note, .mini-editor-message { color: var(--muted); font-size: var(--type-caption); line-height: 1.5; }
+.mini-install-note { margin: 14px 0 0; }
+.mini-install-note code { color: var(--ink); }
+.mini-editor-message { min-height: 2.9em; margin: 10px 0 0; color: #8d9385; }
+
+@container preview (min-width: 584px) {
+  .mini-menu-preview { --mini-screen-scale: 2; }
+}
+
+@media (max-width: 1580px) {
+  .mini-studio { grid-template-columns: 390px 1fr; }
+  .mini-preview-column { grid-column: 2; grid-row: 1 / span 2; }
+  .mini-palette-panel { grid-column: 1; border-top: 1px solid var(--line); border-right: 1px solid var(--line); border-left: 0; }
+}
+
+@media (max-width: 1180px) {
+  .mini-studio { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mini-preview-column { grid-column: 1 / -1; grid-row: 1; min-height: 570px; }
+  .mini-source-panel { grid-column: 1; grid-row: 2; border-top: 1px solid var(--line); }
+  .mini-palette-panel { grid-column: 2; grid-row: 2; border-top: 1px solid var(--line); border-right: 0; border-left: 1px solid var(--line); }
+}
+
+@media (max-width: 760px) {
+  .mini-studio { display: flex; flex-direction: column; }
+  .mini-source-panel, .mini-palette-panel { border: 0; border-bottom: 1px solid var(--line); }
+  .mini-preview-column { min-height: 0; order: -1; padding: 72px 14px 32px; }
+}

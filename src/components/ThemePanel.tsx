@@ -11,6 +11,7 @@ import { matchingPalettePreset, PALETTE_PRESETS, type PalettePresetId } from "..
 import type { ThemeColors, ThemeSettings } from "../types";
 import { Download, RotateCcw } from "./icons";
 import MotionGrid from "./MotionGrid";
+import PaletteColorList, { type PaletteColorItem } from "./PaletteColorList";
 
 const COLOR_LABELS: Record<keyof ThemeColors, string> = {
   background: "Base",
@@ -21,10 +22,24 @@ const COLOR_LABELS: Record<keyof ThemeColors, string> = {
   selectionText: "Selected text",
 };
 
+const COLOR_CONTRAST: Record<keyof ThemeColors, keyof ThemeColors> = {
+  background: "text",
+  chrome: "text",
+  text: "background",
+  directory: "background",
+  selection: "selectionText",
+  selectionText: "selection",
+};
+
+const COLOR_ITEMS = (Object.entries(COLOR_LABELS) as Array<[keyof ThemeColors, string]>)
+  .map(([role, label]) => ({ role, label, contrastWith: COLOR_CONTRAST[role] })) satisfies Array<PaletteColorItem<keyof ThemeColors>>;
+const IMAGE_BACKGROUND_COLOR_ITEMS = COLOR_ITEMS.filter((item) => item.role !== "background");
+
 const visualMotionX = (scrollX: number) => -scrollX;
 
 type ThemePanelProps = {
   settings: ThemeSettings;
+  solidBackground: boolean;
   compiled?: Uint8Array;
   onName: (value: string) => void;
   onColor: (key: keyof ThemeColors, value: string) => void;
@@ -32,6 +47,7 @@ type ThemePanelProps = {
   onMotion: (x: number, y: number) => void;
   onDownload: () => void;
   onReset: () => void;
+  onActiveRole: (role?: keyof ThemeColors) => void;
 };
 
 const ThemePanel: Component<ThemePanelProps> = (props) => (
@@ -58,21 +74,12 @@ const ThemePanel: Component<ThemePanelProps> = (props) => (
         <option value="custom" disabled>Custom</option>
         <For each={PALETTE_PRESETS}>{(preset) => <option value={preset.id}>{preset.label}</option>}</For>
       </select>
-      <div class="color-list">
-        <For each={Object.entries(COLOR_LABELS) as Array<[keyof ThemeColors, string]>}>
-          {([key, label]) => (
-            <label class="color-row">
-              <input
-                type="color"
-                value={props.settings.colors[key]}
-                onInput={(event) => props.onColor(key, event.currentTarget.value)}
-              />
-              <span>{label}</span>
-              <code>{props.settings.colors[key].toUpperCase()}</code>
-            </label>
-          )}
-        </For>
-      </div>
+      <PaletteColorList
+        items={props.solidBackground ? COLOR_ITEMS : IMAGE_BACKGROUND_COLOR_ITEMS}
+        colors={props.settings.colors}
+        onColor={props.onColor}
+        onActiveRole={props.onActiveRole}
+      />
     </div>
 
     <div class="field-group motion-controls">

@@ -13,6 +13,7 @@ type ThemePreviewProps = {
   settings: ThemeSettings;
   background?: PixelImage;
   font?: PixelImage;
+  inspectRole?: keyof ThemeSettings["colors"];
 };
 
 type FontAtlases = {
@@ -27,6 +28,13 @@ const makeCanvas = (width: number, height: number) => {
   canvas.height = height;
   return canvas;
 };
+
+const targetStyle = (x: number, y: number, width: number, height: number) => ({
+  left: `${x / 240 * 100}%`,
+  top: `${y / 160 * 100}%`,
+  width: `${width / 240 * 100}%`,
+  height: `${height / 160 * 100}%`,
+});
 
 const colorChannels = (hex: string) => {
   const value = Number.parseInt(hex.slice(1), 16);
@@ -183,6 +191,17 @@ const ThemePreview: Component<ThemePreviewProps> = (props) => {
   const [menuOpen, setMenuOpen] = createSignal(false);
   const fileList = createPreviewFileList();
   const [selectedRow, setSelectedRow] = createSignal(fileList.selectedRow);
+  const directoryRow = fileList.entries.findIndex((entry) => entry.directory);
+  const textRow = () => {
+    const row = fileList.entries.findIndex((entry, index) => !entry.directory && index !== selectedRow());
+    return row < 0 ? selectedRow() : row;
+  };
+  const rowTextStyle = (row: number) => targetStyle(
+    (props.settings.files.x + props.settings.files.textX) * 8,
+    (props.settings.files.y + props.settings.files.textY + row) * 8,
+    Math.min(props.settings.files.width * 8, fileList.entries[row].name.length * 8),
+    8,
+  );
 
   const selectFile = (event: MouseEvent) => {
     if (menuOpen()) return;
@@ -197,7 +216,7 @@ const ThemePreview: Component<ThemePreviewProps> = (props) => {
     const settings = JSON.parse(JSON.stringify(props.settings)) as ThemeSettings;
     const background = props.background ? makeImageCanvas(props.background) : undefined;
     const font = props.font;
-    const showPopupMenu = menuOpen();
+    const showPopupMenu = menuOpen() || props.inspectRole === "chrome";
     const atlases = font
       ? {
           text: makeTintedFont(font, settings.colors.text),
@@ -229,14 +248,32 @@ const ThemePreview: Component<ThemePreviewProps> = (props) => {
 
   return (
     <SpPreviewFrame menuOpen={menuOpen()} onToggleMenu={() => setMenuOpen((open) => !open)}>
-      <canvas
-        ref={screen}
-        class="gba-screen"
-        width="240"
-        height="160"
-        aria-label="Rendered theme screen; click a file or folder to preview its selected colors"
-        onClick={selectFile}
-      />
+      <div class="gba-screen-wrap">
+        <canvas
+          ref={screen}
+          class="gba-screen"
+          width="240"
+          height="160"
+          aria-label="Rendered theme screen; click a file or folder to preview its selected colors"
+          onClick={selectFile}
+        />
+        <div class="pro-palette-target-layer" aria-hidden="true">
+          <i data-palette-target="background" />
+          <i data-palette-target="chrome" style={targetStyle(40, 8, 160, 128)} />
+          <i data-palette-target="text" style={rowTextStyle(textRow())} />
+          <i data-palette-target="directory" style={rowTextStyle(directoryRow)} />
+          <i
+            data-palette-target="selection"
+            style={targetStyle(
+              props.settings.files.x * 8,
+              (props.settings.files.y + props.settings.files.textY + selectedRow()) * 8,
+              props.settings.files.width * 8,
+              8,
+            )}
+          />
+          <i data-palette-target="selectionText" style={rowTextStyle(selectedRow())} />
+        </div>
+      </div>
     </SpPreviewFrame>
   );
 };

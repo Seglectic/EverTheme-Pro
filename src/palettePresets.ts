@@ -5,6 +5,7 @@
 // ╰──────────────────────────────╯
 
 import type { ThemeColors } from "./types";
+import { quantizeGbaColor } from "./lib/gbaColor";
 
 type PalettePreset = {
   id: string;
@@ -108,5 +109,5 @@ export const palettePreset = (id: PalettePresetId) => {
 };
 
 export const matchingPalettePreset = (colors: ThemeColors) => PALETTE_PRESETS.find((preset) =>
-  (Object.keys(colors) as Array<keyof ThemeColors>).every((key) => colors[key].toLowerCase() === preset.colors[key]),
+  (Object.keys(colors) as Array<keyof ThemeColors>).every((key) => colors[key].toLowerCase() === quantizeGbaColor(preset.colors[key])),
 );

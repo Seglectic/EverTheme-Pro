@@ -8,7 +8,7 @@ import type { PixelImage } from "../types";
 
 type Rgb = readonly [red: number, green: number, blue: number];
 
-export type BackgroundPresetId = "pluses" | "dots" | "seigaiha" | "checks" | "crisscross";
+export type BackgroundPresetId = "solid" | "pluses" | "dots" | "seigaiha" | "checks" | "crisscross";
 
 export type BackgroundPresetColors = {
   background: string;
@@ -59,6 +59,8 @@ const makePattern = (width: number, height: number, colorAt: (x: number, y: numb
   return { width, height, data };
 };
 
+const solid = (colors: PatternColors) => makePattern(8, 8, () => colors.background);
+
 const pluses = (colors: PatternColors) => makePattern(64, 64, (x, y) => {
   const localX = x % 16;
   const localY = y % 16;
@@ -102,6 +104,13 @@ const crisscross = (colors: PatternColors) => makePattern(64, 64, (x, y) => {
 });
 
 export const BACKGROUND_PRESETS: readonly BackgroundPreset[] = [
+  {
+    id: "solid",
+    label: "Solid",
+    defaultColors: { background: "#10140f", primary: "#10140f" },
+    speed: [0, 0],
+    render: solid,
+  },
   {
     id: "pluses",
     label: "Plus field",
@@ -147,6 +156,11 @@ export const generateBackgroundPreset = (
   preset: BackgroundPreset,
   colors: BackgroundPresetColors = preset.defaultColors,
 ) => preset.render(resolveColors(colors));
+
+export const generateSolidBackground = (color: string) => solid(resolveColors({
+  background: color,
+  primary: color,
+}));
 
 export const backgroundPreset = (id: BackgroundPresetId) => {
   const preset = BACKGROUND_PRESETS.find((candidate) => candidate.id === id);

@@ -19,29 +19,39 @@ import {
   backgroundPreset,
   createDefaultBackgroundPresetColors,
   generateBackgroundPreset,
+  generateSolidBackground,
   randomBackgroundMotion,
   randomBackgroundPreset,
   type BackgroundPresetColorKey,
+  type BackgroundPresetColorMap,
   type BackgroundPresetId,
 } from "../lib/backgroundPresets";
+import { quantizeGbaColor, quantizeGbaPalette } from "../lib/gbaColor";
 import { compileTheme } from "../lib/gbatheme";
 import { loadPixelImage, prepareBackground, prepareFont } from "../lib/image";
 import { palettePreset, type PalettePresetId } from "../palettePresets";
 import { themePreset, type ThemePresetId } from "../themePresets";
+import type { ProShareState } from "../lib/shareState";
 import type { PixelImage, RegionSettings, ThemeColors, ThemeRegion, ThemeSettings } from "../types";
 
 const errorMessage = (error: unknown, fallback: string) => error instanceof Error ? error.message : fallback;
 
-export function createThemeEditor() {
-  const initialPreset = randomBackgroundPreset();
-  const initialPresetColors = createDefaultBackgroundPresetColors();
-  const initialSettings = structuredClone(DEFAULT_SETTINGS);
-  Object.assign(initialSettings, randomBackgroundMotion(initialPreset));
+const hardwareBackgroundColors = (colors: BackgroundPresetColorMap): BackgroundPresetColorMap => Object.fromEntries(
+  Object.entries(colors).map(([id, palette]) => [id, quantizeGbaPalette(palette)]),
+) as BackgroundPresetColorMap;
+
+export function createThemeEditor(shared?: ProShareState) {
+  const initialPreset = shared ? backgroundPreset(shared.backgroundPresetId) : randomBackgroundPreset();
+  const initialPresetColors = hardwareBackgroundColors(createDefaultBackgroundPresetColors());
+  if (shared) initialPresetColors[initialPreset.id] = { ...shared.backgroundColors };
+  const initialSettings = structuredClone(shared?.settings ?? DEFAULT_SETTINGS);
+  if (!shared) Object.assign(initialSettings, randomBackgroundMotion(initialPreset));
   const [settings, setSettings] = createStore<ThemeSettings>(initialSettings);
   const [font, setFont] = createSignal<PixelImage>();
-  const [background, setBackground] = createSignal<PixelImage>(
-    generateBackgroundPreset(initialPreset, initialPresetColors[initialPreset.id]),
-  );
+  const initialBackground = initialPreset.id === "solid"
+    ? generateSolidBackground(initialSettings.colors.background)
+    : generateBackgroundPreset(initialPreset, initialPresetColors[initialPreset.id]);
+  const [background, setBackground] = createSignal<PixelImage>(initialBackground);
   const [backgroundName, setBackgroundName] = createSignal(`Built-in · ${initialPreset.label}`);
   const [backgroundPresetId, setBackgroundPresetId] = createSignal<BackgroundPresetId | undefined>(initialPreset.id);
   const [backgroundPresetColors, setBackgroundPresetColors] = createSignal(initialPresetColors);
@@ -132,14 +142,14 @@ export function createThemeEditor() {
       setBackground(await loadPixelImage(terminalSampleUrl, 240, 160));
       setBackgroundName("Terminal sample");
       setBackgroundPresetId(undefined);
-      setSettings("colors", {
+      setSettings("colors", quantizeGbaPalette({
         background: "#151030",
         chrome: "#292929",
         text: "#d8f848",
         directory: "#48f848",
         selection: "#512878",
         selectionText: "#f8f8f8",
-      });
+      }));
       setSettings({ scrollX: 0, scrollY: 0 });
       setPreset("minimal");
       setMessage("Sample loaded");
@@ -150,11 +160,13 @@ export function createThemeEditor() {
 
   const loadBackgroundPreset = (id: BackgroundPresetId) => {
     const preset = backgroundPreset(id);
-    setBackground(generateBackgroundPreset(preset, backgroundPresetColors()[id]));
+    setBackground(preset.id === "solid"
+      ? generateSolidBackground(settings.colors.background)
+      : generateBackgroundPreset(preset, backgroundPresetColors()[id]));
     setBackgroundName(`Built-in · ${preset.label}`);
     setBackgroundPresetId(id);
     setSettings(randomBackgroundMotion(preset));
-    setMessage(`${preset.label} loaded · randomized motion`);
+    setMessage(preset.id === "solid" ? "Solid background loaded" : `${preset.label} loaded · randomized motion`);
   };
 
   const setBackgroundPresetColor = (key: BackgroundPresetColorKey, value: string) => {
@@ -162,30 +174,35 @@ export function createThemeEditor() {
     if (!id) return;
     const preset = backgroundPreset(id);
     const current = backgroundPresetColors();
-    const colors = { ...current[id], [key]: value };
+    const colors = { ...current[id], [key]: quantizeGbaColor(value) };
     setBackgroundPresetColors({ ...current, [id]: colors });
-    setBackground(generateBackgroundPreset(preset, colors));
+    setBackground(preset.id === "solid" ? generateSolidBackground(settings.colors.background) : generateBackgroundPreset(preset, colors));
     setMessage(`${preset.label} colors updated`);
   };
 
   const setPalettePreset = (id: PalettePresetId) => {
-    setSettings("colors", { ...palettePreset(id).colors });
+    const colors = quantizeGbaPalette({ ...palettePreset(id).colors });
+    setSettings("colors", colors);
+    if (backgroundPresetId() === "solid") setBackground(generateSolidBackground(colors.background));
   };
 
   const setThemePreset = (id: ThemePresetId) => {
     const coordinated = themePreset(id);
     const preset = backgroundPreset(coordinated.background.id);
-    const colors = { ...coordinated.background.colors };
+    const colors = quantizeGbaPalette({ ...coordinated.background.colors });
+    const themeColors = quantizeGbaPalette({ ...coordinated.colors });
     const presetColors = { ...backgroundPresetColors(), [preset.id]: colors };
     setSettings(produce((draft) => {
-      draft.colors = { ...coordinated.colors };
+      draft.colors = themeColors;
       draft.header = { ...coordinated.regions.header };
       draft.files = { ...coordinated.regions.files };
       draft.footer = { ...coordinated.regions.footer };
       Object.assign(draft, randomBackgroundMotion(preset));
     }));
     setBackgroundPresetColors(presetColors);
-    setBackground(generateBackgroundPreset(preset, colors));
+    setBackground(preset.id === "solid"
+      ? generateSolidBackground(themeColors.background)
+      : generateBackgroundPreset(preset, colors));
     setBackgroundName(`Built-in · ${preset.label}`);
     setBackgroundPresetId(preset.id);
     setMessage(`${coordinated.label} preset loaded`);
@@ -193,12 +210,14 @@ export function createThemeEditor() {
 
   const reset = () => {
     const preset = randomBackgroundPreset();
-    const presetColors = createDefaultBackgroundPresetColors();
+    const presetColors = hardwareBackgroundColors(createDefaultBackgroundPresetColors());
     const nextSettings = structuredClone(DEFAULT_SETTINGS);
     Object.assign(nextSettings, randomBackgroundMotion(preset));
     setSettings(nextSettings);
     setBackgroundPresetColors(presetColors);
-    setBackground(generateBackgroundPreset(preset, presetColors[preset.id]));
+    setBackground(preset.id === "solid"
+      ? generateSolidBackground(nextSettings.colors.background)
+      : generateBackgroundPreset(preset, presetColors[preset.id]));
     setBackgroundName(`Built-in · ${preset.label}`);
     setBackgroundPresetId(preset.id);
     setMessage("Editor reset");
@@ -241,7 +260,11 @@ export function createThemeEditor() {
       setSettings(region, key, Number(value));
     },
     setName: (value: string) => setSettings("name", value),
-    setColor: (key: keyof ThemeColors, value: string) => setSettings("colors", key, value),
+    setColor: (key: keyof ThemeColors, value: string) => {
+      const color = quantizeGbaColor(value);
+      setSettings("colors", key, color);
+      if (key === "background" && backgroundPresetId() === "solid") setBackground(generateSolidBackground(color));
+    },
     setPalettePreset,
     setThemePreset,
     setMotion: (scrollX: number, scrollY: number) => setSettings({ scrollX, scrollY }),
