@@ -40,7 +40,7 @@ export const createMiniEditor = (initialPalette: MiniPalette = STOCK_MINI_PALETT
   const [identification, setIdentification] = createSignal<MiniRomIdentification>();
   const [loadState, setLoadState] = createSignal<MiniRomLoadState>("idle");
   const [loadError, setLoadError] = createSignal("");
-  const [message, setMessage] = createSignal("Design now · drop stock GBAOS v1.17 when ready to download.");
+  const [message, setMessage] = createSignal("");
   const [background, setBackground] = createSignal<PixelImage>();
   const [backgroundAssets, setBackgroundAssets] = createSignal<MiniBackgroundAssets>();
   const [backgroundName, setBackgroundName] = createSignal("");
@@ -118,6 +118,27 @@ export const createMiniEditor = (initialPalette: MiniPalette = STOCK_MINI_PALETT
     setMessage(hasSolidBackground() ? "Using the solid background color." : "Image removed · choose a solid background color or add another image.");
   };
 
+  const downloadBackgroundTemplate = () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 224;
+    canvas.height = 144;
+    const context = canvas.getContext("2d");
+    if (!context) {
+      setMessage("Your browser could not create the Mini background template.");
+      return;
+    }
+    context.fillStyle = palette.background;
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        setMessage("Your browser could not create the Mini background template.");
+        return;
+      }
+      downloadBlob(blob, "evertheme-mini-background-224x144.png");
+      setMessage("224×144 Mini background template downloaded.");
+    }, "image/png");
+  };
+
   const downloadRom = () => {
     const source = rom();
     const version = identification()?.version;
@@ -149,7 +170,7 @@ export const createMiniEditor = (initialPalette: MiniPalette = STOCK_MINI_PALETT
     setIdentification(undefined);
     setLoadError("");
     setLoadState("idle");
-    setMessage("Design now · drop stock GBAOS v1.17 when ready to download.");
+    setMessage("");
     setBackground(undefined);
     setBackgroundAssets(undefined);
     setBackgroundName("");
@@ -172,6 +193,7 @@ export const createMiniEditor = (initialPalette: MiniPalette = STOCK_MINI_PALETT
     handleRom,
     handleBackground,
     clearBackground,
+    downloadBackgroundTemplate,
     setColor,
     setPalettePreset,
     downloadRom,

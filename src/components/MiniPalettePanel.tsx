@@ -4,7 +4,7 @@
 // │  and exports patched GBAOS.  │
 // ╰──────────────────────────────╯
 
-import { For, type Component } from "solid-js";
+import { For, Show, type Component } from "solid-js";
 import {
   matchingMiniPalettePreset,
   MINI_PALETTE_LABELS,
@@ -31,7 +31,7 @@ type MiniPalettePanelProps = {
 };
 
 const outputSummary = (props: MiniPalettePanelProps) => {
-  if (!props.romReady) return "Drop stock v1.17 when ready to download";
+  if (!props.romReady) return "Requires stock GBAOS v1.17";
   const roleCount = props.patch?.changes.length ?? 0;
   if (props.backgroundName) return roleCount
     ? `Background + ${roleCount} palette roles`
@@ -94,7 +94,9 @@ const MiniPalettePanel: Component<MiniPalettePanelProps> = (props) => (
         </button>
       </div>
       <p class="mini-install-note">Back up your existing file. Install the download as <code>/GBASYS/GBAOS.gba</code>.</p>
-      <p class="mini-editor-message" role="status">{props.message}</p>
+      <Show when={props.message}>
+        <p class="mini-editor-message" role="status">{props.message}</p>
+      </Show>
     </div>
   </aside>
 );
